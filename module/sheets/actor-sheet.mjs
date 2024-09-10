@@ -132,7 +132,7 @@ export class ironboundActorSheet extends ActorSheet {
     let characterClass = {};
     const weapons = [];
     const magicalSocieties = [];
-    const defitems = [];
+    const defenseitems = [];
     const fightingStances = [];
     const favorites = [];
 
@@ -173,8 +173,8 @@ export class ironboundActorSheet extends ActorSheet {
         weapons.push(i);
       } else if (i.type === "magicalSocieties") {
         magicalSocieties.push(i);
-      } else if (i.type === "defitems") {
-        defitems.push(i);
+      } else if (i.type === "defenseitems") {
+        defenseitems.push(i);
       } else if (i.type === "fightingStances") {
         fightingStances.push(i);
       }
@@ -195,7 +195,7 @@ export class ironboundActorSheet extends ActorSheet {
     context.species = species;
     context.weapons = weapons;
     context.magicalSocieties = magicalSocieties;
-    context.defitems = defitems;
+    context.defenseitems = defenseitems;
     context.fightingStances = fightingStances;
     context.favorites = favorites;
   }
@@ -379,7 +379,7 @@ export class ironboundActorSheet extends ActorSheet {
     const item = this.actor.items.get(item_id);
     item.update({ "system.equipped": !item.system.equipped });
     if (!item.system.equipped) {
-      if (item.type === "defitems") {
+      if (item.type === "defenseitems") {
         if (item.system.pool === "Physical") {
           this.actor.update({
             "system.physical.def":
@@ -400,7 +400,7 @@ export class ironboundActorSheet extends ActorSheet {
         }
       }
     } else {
-      if (item.type === "defitems") {
+      if (item.type === "defenseitems") {
         if (item.system.pool === "Physical") {
           this.actor.update({
             "system.physical.def":

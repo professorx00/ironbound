@@ -1,6 +1,6 @@
 import ironboundItemBase from "./base-item.mjs";
 
-export default class ironboundDefitems extends ironboundItemBase {
+export default class ironboundDefenseitems extends ironboundItemBase {
   static defineSchema() {
     const fields = foundry.data.fields;
     const schema = super.defineSchema();
