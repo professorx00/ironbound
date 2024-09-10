@@ -58,7 +58,7 @@ Hooks.once('init', function () {
     boons: models.ironboundBoons,
     banes: models.ironboundBanes,
     consumables: models.ironboundConsumables,
-    defitems: models.ironboundDefItems,
+    defitems: models.ironboundDefitems,
     magicalSocieties: models.ironboundMagicalSocieties,
     potions: models.ironboundPotions,
     wands: models.ironboundWands,
