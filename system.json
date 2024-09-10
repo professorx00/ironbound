@@ -4,12 +4,8 @@
   "description": "The Ironbound system for FoundryVTT!",
   "authors": [
     {
-      "name": "Asacolips",
-      "discord": "asacolips"
-    },
-    {
-      "name": "Lee Talman",
-      "discord": ".pizzaWizard"
+      "name": "Dave Ward",
+      "discord": "grimwood_games"
     }
   ],
   "url": "Replace this with a link to your public repository",
@@ -24,7 +20,7 @@
       "thumbnail": "systems/ironbound/assets/anvil-impact.png"
     }
   ],
-  "version": "1.0.0",
+  "version": "2.0.1",
   "compatibility": {
     "minimum": 11,
     "verified": "12"
@@ -41,8 +37,8 @@
   "packs": [],
   "packFolders": [],
   "socket": false,
-  "manifest": "https://github.com/professorx00/ironbound/releases/download/1.0.1/system.json",
-  "download": "https://github.com/professorx00/ironbound/releases/download/1.0.1/ironbound.zip",
+  "manifest": "https://github.com/professorx00/ironbound/releases/download/1.0.2/system.json",
+  "download": "https://github.com/professorx00/ironbound/releases/download/1.0.2/ironbound.zip",
   "background": "systems/ironbound/assets/anvil-impact.png",
   "gridDistance": 5,
   "gridUnits": "ft",
