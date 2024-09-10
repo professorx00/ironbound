@@ -1,0 +1,466 @@
+import {
+  onManageActiveEffect,
+  prepareActiveEffectCategories,
+} from '../helpers/effects.mjs';
+
+/**
+ * Extend the basic ActorSheet with some very simple modifications
+ * @extends {ActorSheet}
+ */
+export class ironboundActorSheet extends ActorSheet {
+  /** @override */
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["ironbound", "sheet", "actor"],
+      width: 900,
+      height: 1120,
+      tabs: [
+        {
+          navSelector: ".sheet-tabs",
+          contentSelector: ".sheet-body",
+          initial: "favorites",
+        },
+      ],
+    });
+  }
+
+  /** @override */
+  get template() {
+    return `systems/ironbound/templates/actor/actor-${this.actor.type}-sheet.hbs`;
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  async getData() {
+    // Retrieve the data structure from the base sheet. You can inspect or log
+    // the context variable to see the structure, but some key properties for
+    // sheets are the actor object, the data object, whether or not it's
+    // editable, the items array, and the effects array.
+    const context = super.getData();
+
+    // Use a safe clone of the actor data for further operations.
+    const actorData = this.document.toPlainObject();
+
+    // Add the actor's data to context.data for easier access, as well as flags.
+    context.system = actorData.system;
+    context.flags = actorData.flags;
+
+    // Adding a pointer to CONFIG.IRONBOUND
+    context.config = CONFIG.IRONBOUND;
+
+    // Prepare character data and items.
+    if (actorData.type == "character") {
+      this._prepareItems(context);
+      this._prepareCharacterData(context);
+    }
+
+    // Prepare NPC data and items.
+    if (actorData.type == "npc") {
+      this._prepareItems(context);
+    }
+
+    // Enrich biography info for display
+    // Enrichment turns text like `[[/r 1d20]]` into buttons
+    context.enrichedBiography = await TextEditor.enrichHTML(
+      this.actor.system.biography,
+      {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: this.actor.getRollData(),
+        // Relative UUID resolution
+        relativeTo: this.actor,
+      }
+    );
+
+    context.enrichedgmnotes = await TextEditor.enrichHTML(
+      this.actor.system.gmnotes,
+      {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isGM,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: this.actor.getRollData(),
+        // Relative UUID resolution
+        relativeTo: this.actor,
+      }
+    );
+
+
+    // Prepare active effects
+    context.effects = prepareActiveEffectCategories(
+      // A generator that returns all effects stored on the actor
+      // as well as any items
+      this.actor.allApplicableEffects()
+    );
+
+    return context;
+  }
+
+  /**
+   * Character-specific context modifications
+   *
+   * @param {object} context The context object to mutate
+   */
+  _prepareCharacterData(context) {
+    // This is where you can enrich character-specific editor fields
+    // or setup anything else that's specific to this type
+  }
+
+  /**
+   * Organize and classify Items for Actor sheets.
+   *
+   * @param {object} context The context object to mutate
+   */
+  _prepareItems(context) {
+    // Initialize containers.
+    const gear = [];
+    const activeFeats = [];
+    const passiveFeats = [];
+    const flaws = [];
+    const boons = [];
+    const banes = [];
+    const potions = [];
+    const wands = [];
+    const scrolls = [];
+    const consumables = [];
+    let species = {};
+    let characterClass = {};
+    const weapons = [];
+    const magicalSocieties = [];
+    const defItems = [];
+    const fightingStances = [];
+    const favorites = [];
+
+    // Iterate through items, allocating to containers
+    for (let i of context.items) {
+      i.img = i.img || Item.DEFAULT_ICON;
+      // Append to gear.
+      if (i.system.fav) {
+        favorites.push(i);
+      }
+      if (i.type === "gear") {
+        gear.push(i);
+      }
+      // Append to features.
+      else if (i.type === "activeFeats") {
+        activeFeats.push(i);
+      } else if (i.type === "passiveFeats") {
+        passiveFeats.push(i);
+      } else if (i.type === "flaws") {
+        flaws.push(i);
+      } else if (i.type === "boons") {
+        boons.push(i);
+      } else if (i.type === "banes") {
+        banes.push(i);
+      } else if (i.type === "potions") {
+        potions.push(i);
+      } else if (i.type === "wands") {
+        wands.push(i);
+      } else if (i.type === "scrolls") {
+        scrolls.push(i);
+      } else if (i.type === "consumables") {
+        consumables.push(i);
+      } else if (i.type === "characterClass") {
+        characterClass = i;
+      } else if (i.type === "species") {
+        species = i;
+      } else if (i.type === "weapons") {
+        weapons.push(i);
+      } else if (i.type === "magicalSocieties") {
+        magicalSocieties.push(i);
+      } else if (i.type === "defItems") {
+        defItems.push(i);
+      } else if (i.type === "fightingStances") {
+        fightingStances.push(i);
+      }
+    }
+
+    // Assign and return
+    context.gear = gear;
+    context.activeFeats = activeFeats;
+    context.passiveFeats = passiveFeats;
+    context.flaws = flaws;
+    context.boons = boons;
+    context.banes = banes;
+    context.potions = potions;
+    context.wands = wands;
+    context.scrolls = scrolls;
+    context.consumables = consumables;
+    context.characterClass = characterClass;
+    context.species = species;
+    context.weapons = weapons;
+    context.magicalSocieties = magicalSocieties;
+    context.defItems = defItems;
+    context.fightingStances = fightingStances;
+    context.favorites = favorites;
+    context.defItems = defItems;
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  activateListeners(html) {
+    super.activateListeners(html);
+
+    // Render the item sheet for viewing/editing prior to the editable check.
+    html.on("click", ".item-edit", (ev) => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.sheet.render(true);
+    });
+
+    // -------------------------------------------------------------
+    // Everything below here is only needed if the sheet is editable
+    if (!this.isEditable) return;
+
+    // Add Inventory Item
+    html.on("click", ".item-create", this._onItemCreate.bind(this));
+
+    // Delete Inventory Item
+    html.on("click", ".item-delete", (ev) => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.delete();
+      li.slideUp(200, () => this.render(false));
+    });
+
+    // Active Effect management
+    html.on("click", ".effect-control", (ev) => {
+      const row = ev.currentTarget.closest("li");
+      const document =
+        row.dataset.parentId === this.actor.id
+          ? this.actor
+          : this.actor.items.get(row.dataset.parentId);
+      onManageActiveEffect(ev, document);
+    });
+
+    // Rollable abilities.
+    html.on("click", ".rollable", this._onRoll.bind(this));
+    html.on("click", ".roll-damage", this._onRollDamage.bind(this));
+    html.on("click", ".roll-heal", this._onRollHeal.bind(this));
+    html.on("click", ".rollPool", this._onRollPool.bind(this));
+
+    html.on("click", ".bookmark", this._bookmark.bind(this));
+
+    html.on("click", ".equipItem", this._equipItem.bind(this));
+
+    html.on("click", ".change-btn", this._updatePools.bind(this));
+    html.on("click", ".refresh-btn", this._refreshPools.bind(this));
+    html.on("click", ".destinyRefresh-btn", this._refreshDestiny.bind(this));
+    html.on("click", ".powerDiceSelect", this._setPowerDie.bind(this));
+    html.on("click", ".healthDiceSelect", this._setHealthDie.bind(this));
+    html.on("click", ".info", this._toggleDescription.bind(this));
+
+    // Drag events for macros.
+    if (this.actor.isOwner) {
+      let handler = (ev) => this._onDragStart(ev);
+      html.find("li.item").each((i, li) => {
+        if (li.classList.contains("inventory-header")) return;
+        li.setAttribute("draggable", true);
+        li.addEventListener("dragstart", handler, false);
+      });
+    }
+  }
+
+  /**
+   * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onItemCreate(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    // Get the type of item to create.
+    const type = header.dataset.type;
+    // Grab any data associated with this control.
+    const data = foundry.utils.duplicate(header.dataset);
+    // Initialize a default name.
+    const name = `New ${type.capitalize()}`;
+    // Prepare the item object.
+    const itemData = {
+      name: name,
+      type: type,
+      system: data,
+    };
+    // Remove the type from the dataset since it's in the itemData.type prop.
+    delete itemData.system["type"];
+
+    // Finally, create the item!
+    return await Item.create(itemData, { parent: this.actor });
+  }
+
+  /**
+   * Handle clickable rolls.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  _onRoll(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    this._getBoonDialog(dataset);
+    // Handle item rolls.
+    // if (dataset.rollType) {
+    //   if (dataset.rollType == "item") {
+    //     const itemId = element.closest(".item").dataset.itemId;
+    //     const item = this.actor.items.get(itemId);
+    //     if (item) return item.roll();
+    //   }
+    // }
+
+    // Handle rolls that supply the formula directly.
+    // if (dataset.roll) {
+    //   let label = dataset.label ? `[ability] ${dataset.label}` : "";
+    //   let roll = new Roll(dataset.roll, this.actor.getRollData());
+    //   roll.toMessage({
+    //     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    //     flavor: label,
+    //     rollMode: game.settings.get("core", "rollMode"),
+    //   });
+    //   return roll;
+    // }
+  }
+
+  _onRollHeal(event) {
+    const el = event.currentTarget;
+    const dataset = el.dataset;
+    const pool = dataset.pool;
+    const heal = dataset.heal;
+    this.actor.rollHeal(pool, heal);
+  }
+
+  _onRollDamage(event) {
+    const el = event.currentTarget;
+    const dataset = el.dataset;
+    const pool = dataset.pool;
+    const formula = dataset.formula;
+    this.actor.rollDamage(pool, formula);
+  }
+
+  _onRollPool(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const pool = dataset.pool;
+
+    console.log(pool);
+  }
+
+  async _getBoonDialog(data) {
+    const boonDialog = new game.ironbound.ironboundBoonDialog(
+      this.actor,
+      data.pool
+    );
+
+    boonDialog.render(true);
+  }
+
+  async rollCallBack(html, rollData) {
+    console.log("Roll");
+  }
+
+  _bookmark(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const item_id = dataset.itemId;
+    const item = this.actor.items.get(item_id);
+    item.update({ "system.fav": !item.system.fav });
+  }
+
+  _equipItem(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const item_id = dataset.itemId;
+    const item = this.actor.items.get(item_id);
+    item.update({ "system.equipped": !item.system.equipped });
+    if (!item.system.equipped) {
+      if (item.type === "defItems") {
+        if (item.system.pool === "Physical") {
+          this.actor.update({
+            "system.physical.def":
+              this.actor.system.physical.def + item.system.bonus,
+          });
+        }
+        if (item.system.pool === "Arcane") {
+          this.actor.update({
+            "system.arcane.def":
+              this.actor.system.arcane.def + item.system.bonus,
+          });
+        }
+        if (item.system.pool === "Mental") {
+          this.actor.update({
+            "system.mental.def":
+              this.actor.system.mental.def + item.system.bonus,
+          });
+        }
+      }
+    } else {
+      if (item.type === "defItems") {
+        if (item.system.pool === "Physical") {
+          this.actor.update({
+            "system.physical.def":
+              this.actor.system.physical.def - item.system.bonus,
+          });
+        }
+        if (item.system.pool === "Arcane") {
+          this.actor.update({
+            "system.arcane.def":
+              this.actor.system.arcane.def - item.system.bonus,
+          });
+        }
+        if (item.system.pool === "Mental") {
+          this.actor.update({
+            "system.mental.def":
+              this.actor.system.mental.def - item.system.bonus,
+          });
+        }
+      }
+    }
+  }
+
+  _updatePools(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const poolPoint = parseInt(dataset.poolpoint);
+    const pool = dataset.pool;
+    const currentPool = this.actor.system[pool.toLowerCase()].current;
+    this.actor.update({ [`system.${pool}.current`]: currentPool + poolPoint });
+  }
+  _refreshPools(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const pool = dataset.pool;
+    this.actor.update({
+      [`system.${pool}.current`]: this.actor.system[pool.toLowerCase()].base,
+    });
+  }
+
+  _refreshDestiny(event) {
+    this.actor.update({ "system.destinyDie": this.actor.destinyDieBase });
+  }
+
+  _setPowerDie(event) {
+    const element = event.currentTarget;
+    const value = element.value;
+    this.actor.update({ "system.powerDie": value });
+  }
+  _setHealthDie(event) {
+    const element = event.currentTarget;
+    const value = element.value;
+    this.actor.update({ "system.healthDie": value });
+  }
+
+  _toggleDescription(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const item_id = dataset.itemId;
+    const descriptionEl = document.getElementById(item_id);
+    descriptionEl.classList.toggle("hidden");
+  }
+}

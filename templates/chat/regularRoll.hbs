@@ -1,0 +1,10 @@
+<div class="chat_roll">
+    <div>{{rollType}} Roll</div>
+    {{{rollHTML}}}
+    {{#if (rollNotCritical roll)}}
+    <a class="chat-addition-btn" data-pool="{{pool}}" data-actor-id="{{actor}}" data-roll="{{roll}}">Add Pool Points</a>
+    {{/if}}
+    {{#if (hasDestinyDie destinyDice)}}
+    <a class="destinyDie-btn" data-actor-id="{{actor}}" data-pool="{{pool}}" data-roll-type="{{roll_type}}">Use Destiny Die</a>
+    {{/if}}
+</div>

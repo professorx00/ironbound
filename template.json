@@ -1,0 +1,8 @@
+{
+  "Actor": {
+    "types": ["character", "npc"]
+  },
+  "Item": {
+    "types": ["characterClass","gear", "activeFeats","passiveFeats", "flaws", "boons", "banes","consumables","defItems","factions","fightingstances","magicalSocieties","potions","wands","weapons","species","scrolls"]
+  }
+}

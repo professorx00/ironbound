@@ -1,0 +1,16 @@
+<div class="pool-main">
+    <h1>Add Pool Points</h1>
+    <h2>{{pool}} has {{points}}</h2>
+    <h2>you rolled a {{roll}}</h2>
+    <div>
+        <h3>how many would you like to add?</h3>
+        <div class="pool-container">
+            <a class="add-pool-btn" data-addingNum="1" data-pool="{{pool}}" data-roll="{{roll}}"><i class="fa-solid fa-plus"></i></a>
+            <input class="boon-num-field" type="number" name="pool" value="{{actor.system.rollBoost}}" data-dtype="Number"/>
+            <a class="add-pool-btn" data-addingNum="-1" data-pool="{{pool}}" data-roll="{{roll}}"><i class="fa-solid fa-minus"></i></a>
+        </div>
+    </div>
+    <div>
+        <a class="submit-pool-add" data-boost="{{actor.system.rollBoost}}" data-pool="{{pool}}" data-roll="{{roll}}">Add Pool Points</a>
+    </div>
+</div>

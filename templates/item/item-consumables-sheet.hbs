@@ -1,0 +1,69 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <a class="favoriteBtn">
+        {{#if system.fav}}
+        <i class="fa-solid fa-bookmark"></i>
+        {{else}}
+        <i class="fa-regular fa-bookmark"></i>
+        {{/if}}
+      </a>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="effects">Effects</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedDescription target="system.description" engine="prosemirror" button=true editable=editable}}
+    </div>
+
+    {{!-- Attributes Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="attributes">
+      {{!-- As you add new fields, add them in here! --}}
+      <div class="flex">
+        <div class="item-attributes">
+          <label for="system.actionPoints">Action Points Required</label>
+          <input class="ib_input num-field" type="number" name="system.actionPoints" value="{{system.actionPoints}}" data-dtype="Number"/>
+        </div>
+        <div class="item-attributes">
+          <label for="system.actionPoints">Pool</label>
+          <select name="Pools" class="poolSelect">
+            {{selectOptions system.pools selected=system.pool}}
+          </select>
+        </div>
+        <div class="item-attributes">
+          <label for="system.formula">Damage Formula</label>
+          <input class="ib_input" type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
+        </div>
+        <div class="item-attributes">
+          <label>Does potion heal?</label>
+          <input class="" type="checkbox" name="system.heal" {{checked system.heal}}>
+        </div>
+        {{#if system.heal}}
+          <div class="item-attributes">
+            <label for="system.healFormula">Heal Formula</label>
+            <input class="ib_input" type="text" name="system.healFormula" value="{{system.healFormula}}" data-dtype="String"/>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- Effects Tab --}}
+    <div class="tab effects" data-group="primary" data-tab="effects">
+      {{> "systems/ironbound/templates/item/parts/item-effects.hbs"}}
+    </div>
+  </section>
+
+</form>
