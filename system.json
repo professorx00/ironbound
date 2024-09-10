@@ -24,10 +24,10 @@
       "thumbnail": "systems/ironbound/assets/anvil-impact.png"
     }
   ],
-  "version": "2.0.0",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": 11,
-    "verified": "11.315"
+    "verified": "12"
   },
   "esmodules": ["module/ironbound.mjs"],
   "styles": ["css/ironbound.css"],
@@ -41,8 +41,8 @@
   "packs": [],
   "packFolders": [],
   "socket": false,
-  "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
-  "download": "This must link to a .zip file of the current version",
+  "manifest": "https://github.com/professorx00/ironbound/releases/download/1.0.1/system.json",
+  "download": "https://github.com/professorx00/ironbound/releases/download/1.0.1/ironbound.zip",
   "background": "systems/ironbound/assets/anvil-impact.png",
   "gridDistance": 5,
   "gridUnits": "ft",
