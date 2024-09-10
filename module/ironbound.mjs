@@ -58,7 +58,7 @@ Hooks.once('init', function () {
     boons: models.ironboundBoons,
     banes: models.ironboundBanes,
     consumables: models.ironboundConsumables,
-    defItems: models.ironboundDefItems,
+    defitems: models.ironboundDefItems,
     magicalSocieties: models.ironboundMagicalSocieties,
     potions: models.ironboundPotions,
     wands: models.ironboundWands,
@@ -67,9 +67,8 @@ Hooks.once('init', function () {
     factions: models.ironboundFactions,
     species: models.ironboundSpecies,
     scrolls: models.ironboundScrolls,
-    gear: models.ironboundGear
-
-  }
+    gear: models.ironboundGear,
+  };
 
   // Active Effects are never copied to the Actor,
   // but will still apply to the Actor from within the Item

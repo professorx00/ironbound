@@ -11,7 +11,7 @@ export {default as ironboundCharacterClass} from "./item-characterClass.mjs";
 export {default as ironboundBoons} from "./item-boons.mjs";
 export {default as ironboundBanes} from "./item-banes.mjs";
 export {default as ironboundConsumables} from "./item-consumables.mjs";
-export {default as ironboundDefItems} from "./item-defItems.mjs";
+export { default as ironboundDefItems } from "./item-defitems.mjs";
 export {default as ironboundFlaws} from "./item-flaws.mjs";
 export {default as ironboundMagicalSocieties} from "./item-magicalSocieties.mjs";
 export {default as ironboundPotions} from "./item-potions.mjs";
