@@ -8,6 +8,8 @@ export const preloadHandlebarsTemplates = async function () {
     // Actor partials.
     "systems/ironbound/templates/actor/parts/actor-features.hbs",
     "systems/ironbound/templates/actor/parts/actor-items.hbs",
+    "systems/ironbound/templates/actor/parts/actor-items-npc.hbs",
+    "systems/ironbound/templates/actor/parts/actor-items-npcabilities.hbs",
     "systems/ironbound/templates/actor/parts/actor-effects.hbs",
     "systems/ironbound/templates/actor/parts/actor-favorites.hbs",
     "systems/ironbound/templates/actor/parts/actor-flaws.hbs",

@@ -90,7 +90,6 @@ export class ironboundActorSheet extends ActorSheet {
       }
     );
 
-
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(
       // A generator that returns all effects stored on the actor
@@ -135,6 +134,8 @@ export class ironboundActorSheet extends ActorSheet {
     const defenseitems = [];
     const fightingStances = [];
     const favorites = [];
+    const npcattack = [];
+    const npcability = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -177,6 +178,10 @@ export class ironboundActorSheet extends ActorSheet {
         defenseitems.push(i);
       } else if (i.type === "fightingStances") {
         fightingStances.push(i);
+      } else if (i.type === "npcattack") {
+        npcattack.push(i);
+      } else if (i.type === "npcability") {
+        npcability.push(i);
       }
     }
 
@@ -198,6 +203,8 @@ export class ironboundActorSheet extends ActorSheet {
     context.defenseitems = defenseitems;
     context.fightingStances = fightingStances;
     context.favorites = favorites;
+    context.npcattack = npcattack;
+    context.npcability = npcability;
   }
 
   /* -------------------------------------------- */
@@ -243,17 +250,31 @@ export class ironboundActorSheet extends ActorSheet {
     html.on("click", ".roll-damage", this._onRollDamage.bind(this));
     html.on("click", ".roll-heal", this._onRollHeal.bind(this));
     html.on("click", ".rollPool", this._onRollPool.bind(this));
+    html.on("click", ".rollHealthDie", this._rollHealthDie.bind(this));
+    html.on("click", ".rollPowerDie", this._rollPowerDie.bind(this));
 
     html.on("click", ".bookmark", this._bookmark.bind(this));
 
     html.on("click", ".equipItem", this._equipItem.bind(this));
 
     html.on("click", ".change-btn", this._updatePools.bind(this));
+    html.on("click", ".deleteClass", this._deleteClass.bind(this));
     html.on("click", ".refresh-btn", this._refreshPools.bind(this));
     html.on("click", ".destinyRefresh-btn", this._refreshDestiny.bind(this));
     html.on("click", ".powerDiceSelect", this._setPowerDie.bind(this));
     html.on("click", ".healthDiceSelect", this._setHealthDie.bind(this));
     html.on("click", ".info", this._toggleDescription.bind(this));
+    html.on("click", ".rollDestinyDie-btn", this._rollDestinyDie.bind(this));
+    html.on(
+      "click",
+      ".refresh-actionPoints-btn",
+      this._resetActionPoints.bind(this)
+    );
+    html.on(
+      "click",
+      ".change-actionPoint-btn",
+      this._changeActionPoints.bind(this)
+    );
 
     // Drag events for macros.
     if (this.actor.isOwner) {
@@ -325,6 +346,14 @@ export class ironboundActorSheet extends ActorSheet {
     // }
   }
 
+  _deleteClass(event) {
+    const el = event.currentTarget;
+    const dataset = el.dataset;
+    const classId = dataset.classId;
+    let item = this.actor.items.get(classId);
+    item.delete();
+  }
+
   _onRollHeal(event) {
     const el = event.currentTarget;
     const dataset = el.dataset;
@@ -345,13 +374,13 @@ export class ironboundActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
     const pool = dataset.pool;
-
-    console.log(pool);
+    this._getBoonDialog(dataset);
   }
 
   async _getBoonDialog(data) {
     const boonDialog = new game.ironbound.ironboundBoonDialog(
       this.actor,
+      data.rollType,
       data.pool
     );
 
@@ -461,5 +490,52 @@ export class ironboundActorSheet extends ActorSheet {
     const item_id = dataset.itemId;
     const descriptionEl = document.getElementById(item_id);
     descriptionEl.classList.toggle("hidden");
+  }
+
+  _changeActionPoints(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const poolPoint = parseInt(dataset.poolpoint);
+    const currentActionPoints = this.actor.system.actionPoints;
+    const baseActionPoints = this.actor.system.actionPointsBase;
+    let newActions = 0;
+    if (currentActionPoints + poolPoint < 0) {
+      newActions = 0;
+    } else if (currentActionPoints + poolPoint > baseActionPoints) {
+      newActions = baseActionPoints;
+    } else {
+      newActions = currentActionPoints + poolPoint;
+    }
+    this.actor.update({ "system.actionPoints": newActions });
+  }
+
+  _resetActionPoints(event) {
+    const baseActionPoints = this.actor.system.actionPointsBase;
+    this.actor.update({ "system.actionPoints": baseActionPoints });
+  }
+
+  _rollDestinyDie(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const formula = dataset.formula;
+    const pool = dataset.pool;
+    this.actor.rollDestiny(formula, pool);
+  }
+
+  _rollHealthDie(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const formula = dataset.formula;
+    const pool = dataset.pool;
+    this.actor.rollHealth(formula, pool);
+  }
+
+  _rollPowerDie(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const formula = dataset.formula;
+    const pool = dataset.pool;
+    console.log(formula, pool)
+    this.actor.rollPower(formula, pool);
   }
 }

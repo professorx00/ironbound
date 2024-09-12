@@ -77,6 +77,11 @@ export default class ironboundCharacter extends ironboundActorBase {
       initial: 3,
     });
 
+    schema.actionPointsBase = new fields.NumberField({
+      ...requiredInteger,
+      initial: 3,
+    });
+
     schema.destinyDie = new fields.NumberField({
       ...requiredInteger,
       initial: 1,

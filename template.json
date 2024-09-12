@@ -20,7 +20,9 @@
       "wands",
       "weapons",
       "species",
-      "scrolls"
+      "scrolls",
+      "npcability",
+      "npcattack"
     ]
   }
 }

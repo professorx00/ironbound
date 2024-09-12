@@ -14,7 +14,7 @@ import * as models from './data/_module.mjs';
 /*  Init Hook                                   */
 /* -------------------------------------------- */
 
-Hooks.once('init', function () {
+Hooks.once("init", function () {
   // Add utility classes to the global game object so that they're more easily
   // accessible in global contexts.
   game.ironbound = {
@@ -24,7 +24,6 @@ Hooks.once('init', function () {
     ironboundAddPoolDialog,
     ironboundHealDialog,
     rollItemMacro,
-    
   };
 
   // Add custom constants for configuration.
@@ -35,7 +34,7 @@ Hooks.once('init', function () {
    * @type {String}
    */
   CONFIG.Combat.initiative = {
-    formula: '1d20 + @abilities.dex.mod',
+    formula: "1d20 + @abilities.dex.mod",
     decimals: 2,
   };
 
@@ -47,8 +46,8 @@ Hooks.once('init', function () {
   // with the Character/NPC as part of super.defineSchema()
   CONFIG.Actor.dataModels = {
     character: models.ironboundCharacter,
-    npc: models.ironboundNPC
-  }
+    npc: models.ironboundNPC,
+  };
   CONFIG.Item.documentClass = ironboundItem;
   CONFIG.Item.dataModels = {
     activeFeats: models.ironboundActiveFeat,
@@ -68,6 +67,8 @@ Hooks.once('init', function () {
     species: models.ironboundSpecies,
     scrolls: models.ironboundScrolls,
     gear: models.ironboundGear,
+    npcattack: models.ironboundNPCAttack,
+    npcability: models.ironboundNPCAbility,
   };
 
   // Active Effects are never copied to the Actor,
@@ -76,15 +77,15 @@ Hooks.once('init', function () {
   CONFIG.ActiveEffect.legacyTransferral = false;
 
   // Register sheet application classes
-  Actors.unregisterSheet('core', ActorSheet);
-  Actors.registerSheet('ironbound', ironboundActorSheet, {
+  Actors.unregisterSheet("core", ActorSheet);
+  Actors.registerSheet("ironbound", ironboundActorSheet, {
     makeDefault: true,
-    label: 'IRONBOUND.SheetLabels.Actor',
+    label: "IRONBOUND.SheetLabels.Actor",
   });
-  Items.unregisterSheet('core', ItemSheet);
-  Items.registerSheet('ironbound', ironboundItemSheet, {
+  Items.unregisterSheet("core", ItemSheet);
+  Items.registerSheet("ironbound", ironboundItemSheet, {
     makeDefault: true,
-    label: 'IRONBOUND.SheetLabels.Item',
+    label: "IRONBOUND.SheetLabels.Item",
   });
 
   // class IronboundBoonDialog extends Dialog {
@@ -104,7 +105,6 @@ Hooks.once('init', function () {
   //   }
   // }
 
-
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });
@@ -114,24 +114,24 @@ Hooks.once('init', function () {
 /* -------------------------------------------- */
 
 // If you need to add Handlebars helpers, here is a useful example:
-Handlebars.registerHelper('toLowerCase', function (str) {
+Handlebars.registerHelper("toLowerCase", function (str) {
   return str.toLowerCase();
 });
 Handlebars.registerHelper("isRangedWeapon", function (str) {
-  if(str === "Single Action" || str === "Automatics"){
-    return true
-  }else{
-    return false
+  if (str === "Single Action" || str === "Automatics") {
+    return true;
+  } else {
+    return false;
   }
 });
 
-Handlebars.registerHelper("isNotPassive", function(passive){
-  if(passive){
-    return false
-  }else{
-    return true
+Handlebars.registerHelper("isNotPassive", function (passive) {
+  if (passive) {
+    return false;
+  } else {
+    return true;
   }
-})
+});
 Handlebars.registerHelper("rollNotCritical", function (roll) {
   if (parseInt(roll) === 1) {
     return false;
@@ -149,46 +149,54 @@ Handlebars.registerHelper("hasDestinyDie", function (dice) {
 });
 
 Handlebars.registerHelper("isGM", function (user) {
-  console.log("hi", game.user.isGM);
   return game.user.isGM;
-})
+});
 
-
-
-Handlebars.registerHelper("isDamageItem", function(item){
-  if(!item?.system?.formula){
-    return false
+Handlebars.registerHelper("isCharacter", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.type == "npc") {
+    return false;
+  } else {
+    return true;
   }
-  if(item.system.formula !== ""){
-    return true
-  }else{
-    return false
+});
+
+Handlebars.registerHelper("isDamageItem", function (item) {
+  if (!item?.system?.formula) {
+    return false;
+  }
+  if (item.system.formula !== "") {
+    return true;
+  } else {
+    return false;
   }
 });
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
 
-Hooks.once('ready', function () {
+Hooks.once("ready", function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
-  Hooks.on('hotbarDrop', (bar, data, slot) => createItemMacro(data, slot));
-  
-  
+  Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
 });
 
 Hooks.on("renderChatMessage", function (message, html, messageData) {
   console.log("Chat rendered");
   html.find(".destinyDie-btn").click((ev) => {
-    const el = ev.currentTarget
-    const dataset = el.dataset
-    console.log(dataset)
-    rollDestiny(dataset.actorId, dataset.pool, dataset.rollType);
-  });
-
-  html.find(".chat-addition-btn").click((ev)=>{
     const el = ev.currentTarget;
     const dataset = el.dataset;
-    addPoolPoints(dataset.actorId, dataset.pool, dataset.roll)
+    rollDestiny(
+      dataset.actorId,
+      dataset.pool,
+      dataset.rollType,
+      dataset.formula
+    );
+  });
+
+  html.find(".chat-addition-btn").click((ev) => {
+    const el = ev.currentTarget;
+    const dataset = el.dataset;
+    addPoolPoints(dataset.actorId, dataset.pool, dataset.roll);
   });
 });
 
@@ -205,10 +213,10 @@ Hooks.on("renderChatMessage", function (message, html, messageData) {
  */
 async function createItemMacro(data, slot) {
   // First, determine if this is a valid owned item.
-  if (data.type !== 'Item') return;
-  if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
+  if (data.type !== "Item") return;
+  if (!data.uuid.includes("Actor.") && !data.uuid.includes("Token.")) {
     return ui.notifications.warn(
-      'You can only create macro buttons for owned Items'
+      "You can only create macro buttons for owned Items"
     );
   }
   // If it is, retrieve it based on the uuid.
@@ -222,10 +230,10 @@ async function createItemMacro(data, slot) {
   if (!macro) {
     macro = await Macro.create({
       name: item.name,
-      type: 'script',
+      type: "script",
       img: item.img,
       command: command,
-      flags: { 'ironbound.itemMacro': true },
+      flags: { "ironbound.itemMacro": true },
     });
   }
   game.user.assignHotbarMacro(macro, slot);
@@ -240,7 +248,7 @@ async function createItemMacro(data, slot) {
 function rollItemMacro(itemUuid) {
   // Reconstruct the drop data so that we can load the item.
   const dropData = {
-    type: 'Item',
+    type: "Item",
     uuid: itemUuid,
   };
   // Load the item from the uuid.
@@ -258,22 +266,21 @@ function rollItemMacro(itemUuid) {
   });
 }
 
-function rollDestiny(actor_id, pool, type){
+function rollDestiny(actor_id, pool, type, formula) {
   let actor = game.actors.get(actor_id);
-  actor.rollDestiny(type, pool);
+  actor.rollDestiny(formula, pool);
 }
 function addPoolPoints(actor_id, pool, roll) {
   let actor = game.actors.get(actor_id);
   actor.addPoolPoints(pool, roll);
 }
 
-
-
 class ironboundBoonDialog extends Application {
-  constructor(actor, pool) {
+  constructor(actor, type, pool) {
     super();
-    this.actor = actor
-    this.pool = pool
+    this.actor = actor;
+    this.pool = pool;
+    this.rollType = type;
   }
 
   static get defaultOptions() {
@@ -292,7 +299,8 @@ class ironboundBoonDialog extends Application {
     // Send data to the template
     return {
       actor: this.actor,
-      pool: this.pool
+      pool: this.pool,
+      rollType: this.rollType,
     };
   }
 
@@ -303,28 +311,28 @@ class ironboundBoonDialog extends Application {
     html.find(".roll-btn").click((ev) => this._rollCheck(ev));
   }
 
-  async _boonChange(event){
+  async _boonChange(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
     const addingNum = parseInt(dataset.addingnum);
     const updateValue = this.actor.system.currentBoons + addingNum;
-    await this.actor.update({'system.currentBoons': updateValue})
+    await this.actor.update({ "system.currentBoons": updateValue });
     this.render();
   }
 
-  async _rollCheck(event){
+  async _rollCheck(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
-    this.actor.roll(dataset.type, dataset.pool)
-    this.close()
+    this.actor.roll(dataset.type, dataset.pool);
+    this.close();
   }
 
-  async _chatUpdate(event){
+  async _chatUpdate(event) {
     const element = event.currentTarget;
     const dataset = element.dataset;
-    console.log("check ")
+    console.log("check ");
   }
 
   // /** @override */

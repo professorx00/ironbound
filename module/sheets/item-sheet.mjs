@@ -11,14 +11,14 @@ export class ironboundItemSheet extends ItemSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ['ironbound', 'sheet', 'item'],
+      classes: ["ironbound", "sheet", "item"],
       width: 520,
-      height: 480,
+      height: 520,
       tabs: [
         {
-          navSelector: '.sheet-tabs',
-          contentSelector: '.sheet-body',
-          initial: 'description',
+          navSelector: ".sheet-tabs",
+          contentSelector: ".sheet-body",
+          initial: "description",
         },
       ],
     });

@@ -148,12 +148,98 @@ export class ironboundActor extends Actor {
     ChatMessage.create(chatOptions);
   }
 
-  async rollDestiny(type, pool) {
+  async rollDestiny(formula, pool) {
     await this.update({ "system.destinyDie": this.system.destinyDie - 1 });
-    this.roll(type, pool);
+    let roll = await new Roll(formula).evaluate();
+    let criticalSuccess = false;
+    let criticalFailure = false;
+    const destinyDice = this.system.destinyDie;
+    let type = "Destiny";
+    if (roll._total == 12) {
+      criticalSuccess = true;
+    }
+    if (roll._total == 1) {
+      criticalFailure = true;
+    }
+    let rollResults = "";
+    const rollData = {
+      rollHTML: await roll.render(),
+      rollResults: rollResults,
+      roll: roll._total,
+      roll_type: type,
+      actor: this._id,
+      pool: pool,
+      criticalSuccess,
+      criticalFailure,
+      destinyDice: destinyDice,
+      formula: formula,
+    };
+
+    this.sendRolltoChat(rollData, roll, "regularRoll.hbs");
+  }
+
+  async rollHealth(formula, pool) {
+    let roll = await new Roll(formula).evaluate();
+    let criticalSuccess = false;
+    let criticalFailure = false;
+    const destinyDice = this.system.destinyDie;
+    let type = "Health Die ";
+    if (roll._total == 12) {
+      criticalSuccess = true;
+    }
+    if (roll._total == 1) {
+      criticalFailure = true;
+    }
+    let rollResults = "";
+    const rollData = {
+      rollHTML: await roll.render(),
+      rollResults: rollResults,
+      roll: roll._total,
+      roll_type: type,
+      actor: this._id,
+      pool: pool,
+      criticalSuccess,
+      criticalFailure,
+      destinyDice: destinyDice,
+      formula: formula,
+    };
+
+    this.sendRolltoChat(rollData, roll, "healthDieRoll.hbs");
+  }
+
+  async rollPower(formula, pool) {
+    let roll = await new Roll(formula).evaluate();
+    let criticalSuccess = false;
+    let criticalFailure = false;
+    const destinyDice = 0;
+    let type = "Power Die ";
+    if (roll._total == 12) {
+      criticalSuccess = true;
+    }
+    if (roll._total == 1) {
+      criticalFailure = true;
+    }
+    let rollResults = "";
+    const rollData = {
+      rollHTML: await roll.render(),
+      rollResults: rollResults,
+      roll: roll._total,
+      roll_type: type,
+      actor: this._id,
+      pool: pool,
+      criticalSuccess,
+      criticalFailure,
+      destinyDice: destinyDice,
+      formula: formula,
+    };
+
+    this.sendRolltoChat(rollData, roll, "healthDieRoll.hbs");
   }
 
   async addPoolPoints(pool, roll) {
+    if (pool == "destiny") {
+      return;
+    }
     let points = this.system[pool.toLowerCase()].current;
     const pointDialog = new game.ironbound.ironboundAddPoolDialog(
       this,

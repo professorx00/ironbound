@@ -237,9 +237,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   justify-content: flex-start;
-  min-height: 350px;
+  height:fit-content;
   background: url(../assets/background2.jpg);
 }
 .ironbound .sheet-header .profile-img {
@@ -277,6 +276,10 @@
 
 .ironbound .sheet-boon {
   flex: 0.45;
+}
+
+.ironbound .sheet-boon-npc {
+  flex: 0.35;
 }
 
 .sheet .editor-content{
@@ -785,4 +788,47 @@
   background: #444;
   color:#c9c7b8;
   padding: 10px;
+}
+
+.change-actionPoint-btn{
+  width: 25px;
+  height: 25px;
+  background-color: #444;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#c9c7b8;
+  margin: 3px;
+}
+
+.refresh-actionPoints-btn{
+   width: 25px;
+  height: 25px;
+  background-color: #444;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#c9c7b8;
+  margin: 3px;
+}
+
+.chat-pools{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.targetNumber{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sheet-stats{
+  flex: 0.35;
 }

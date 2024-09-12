@@ -22,5 +22,7 @@ export { default as ironboundWeapons} from "./item-weapons.mjs";
 export { default as ironboundFightingStances} from "./item-fightingstances.mjs";
 export { default as ironboundFactions} from "./item-factions.mjs";
 export { default as ironboundGear} from "./item-gear.mjs";
+export { default as ironboundNPCAttack } from "./item-npcattack.mjs";
+export { default as ironboundNPCAbility } from "./item-npcability.mjs";
 
 
