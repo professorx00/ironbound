@@ -39,7 +39,11 @@ export class ironboundActor extends Actor {
    * but have slightly different data preparation needs.
    */
   getRollData() {
-    return { ...super.getRollData(), ...(this.system.getRollData?.() ?? null) };
+    return {
+      ...super.getRollData(),
+      ...(this.system.getRollData?.() ?? null),
+      "@powerDie": this.system.powerDie,
+    };
   }
 
   activateListeners(html) {
@@ -111,15 +115,17 @@ export class ironboundActor extends Actor {
   }
 
   async rollDamage(pool, formula) {
-    let roll = await new Roll(formula).evaluate();
+    let roll = await new Roll(formula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
+      ...this.getRollData(),
       rollHTML: await roll.render(),
       rollResults: rollResults,
       roll: roll._total,
       actor: this._id,
       pool: pool,
     };
+    console.log(rollData);
     let cardContent = await renderTemplate(
       "systems/ironbound/templates/chat/damageRoll.hbs",
       rollData

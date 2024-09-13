@@ -234,7 +234,7 @@
 }
 
 .ironbound .sheet-header {
-  overflow: hidden;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
