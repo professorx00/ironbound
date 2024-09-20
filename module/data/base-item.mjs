@@ -21,6 +21,17 @@ export default class ironboundItemBase extends ironboundDataModel {
       initial: 0,
     });
     schema.fav = new fields.BooleanField();
+    schema.hasBoon = new fields.BooleanField();
+
+    schema.weaponTypes = new fields.SchemaField({
+      Slashing: new fields.StringField({ initial: "Slashing" }),
+      Bludgeoning: new fields.StringField({ initial: "Bludgeoning" }),
+      Piercing: new fields.StringField({ initial: "Piercing" }),
+      "Single Action": new fields.StringField({ initial: "Single Action" }),
+      Automatics: new fields.StringField({ initial: "Automatics" }),
+    });
+
+    schema.wtype = new fields.StringField({ initial: "Slashing" });
     return schema;
   }
 

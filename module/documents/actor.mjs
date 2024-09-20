@@ -90,15 +90,67 @@ export class ironboundActor extends Actor {
     this.update({ "system.currentBoons": 0 });
   }
 
-  async rollHeal(pool, heal) {
-    let roll = await new Roll(heal).evaluate();
+  changeFormula(formula) {
+    let splitFormula = formula.split("+");
+    let newForumla = "";
+    splitFormula.forEach((part) => {
+      let partSplit = [];
+      if (part.includes("-")) {
+        partSplit = part.split("-");
+        partSplit.forEach((p, index) => {
+          if (p.toLowerCase().includes("d")) {
+            let diceNumbers = p.toLowerCase().split("d");
+            diceNumbers[0] = parseInt(diceNumbers[0]) * 2;
+            let newDice = diceNumbers[0] + "d" + diceNumbers[1];
+            if (index !== 0) {
+              newForumla = newForumla + "-" + newDice;
+            } else {
+              newForumla = newForumla + "+" + newDice;
+            }
+          } else {
+            newForumla = newForumla + "-" + p;
+          }
+        });
+      } else {
+        if (part.toLowerCase().includes("d")) {
+          let partSplit = part.toLowerCase().split("d");
+          partSplit[0] = parseInt(partSplit[0]) * 2;
+          newForumla = newForumla + "+" + partSplit[0] + "d" + partSplit[1];
+        } else {
+          newForumla = newForumla + "+" + part;
+        }
+      }
+    });
+    if (newForumla[0] === "+") {
+      newForumla = newForumla.slice(1);
+    }
+    return newForumla;
+  }
+
+  async rollHeal(pool, formula, crit, powerdie) {
+    let newFormula = formula;
+    let pdie = false;
+    let critdie = false;
+    if (powerdie === "true") {
+      newFormula = newFormula + "+" + this.system.powerDie;
+      pdie = true;
+    }
+    if (crit === "true") {
+      newFormula = this.changeFormula(newFormula);
+      critdie = true;
+    }
+    let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
+      ...this.getRollData(),
       rollHTML: await roll.render(),
       rollResults: rollResults,
       roll: roll._total,
       actor: this._id,
       pool: pool,
+      formula: formula,
+      powerdie: pdie,
+      crit: critdie,
     };
     let cardContent = await renderTemplate(
       "systems/ironbound/templates/chat/healRoll.hbs",
@@ -110,12 +162,27 @@ export class ironboundActor extends Actor {
       content: cardContent,
       speaker: ChatMessage.getSpeaker({ actor: this }),
     };
-
     ChatMessage.create(chatOptions);
   }
 
-  async rollDamage(pool, formula) {
-    let roll = await new Roll(formula, this.getRollData()).evaluate();
+  async rollCrit() {
+    const damageDialog = new game.ironbound.ironboundDamageDialog(this);
+  }
+
+  async rollDamage(pool, formula, crit, powerdie, weapon) {
+    let newFormula = formula;
+    let pdie = false;
+    let critdie = false;
+    if (powerdie === "true") {
+      newFormula = newFormula + "+" + this.system.powerDie;
+      pdie = true;
+    }
+    if (crit === "true") {
+      newFormula = this.changeFormula(newFormula);
+      critdie = true;
+    }
+
+    let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
       ...this.getRollData(),
@@ -124,8 +191,12 @@ export class ironboundActor extends Actor {
       roll: roll._total,
       actor: this._id,
       pool: pool,
+      formula: formula,
+      powerdie: pdie,
+      crit: critdie,
+      weapon: weapon,
     };
-    console.log(rollData);
+
     let cardContent = await renderTemplate(
       "systems/ironbound/templates/chat/damageRoll.hbs",
       rollData
@@ -208,6 +279,7 @@ export class ironboundActor extends Actor {
       criticalFailure,
       destinyDice: destinyDice,
       formula: formula,
+      actor: this._id,
     };
 
     this.sendRolltoChat(rollData, roll, "healthDieRoll.hbs");
@@ -226,6 +298,7 @@ export class ironboundActor extends Actor {
       criticalFailure = true;
     }
     let rollResults = "";
+
     const rollData = {
       rollHTML: await roll.render(),
       rollResults: rollResults,
@@ -237,9 +310,10 @@ export class ironboundActor extends Actor {
       criticalFailure,
       destinyDice: destinyDice,
       formula: formula,
+      actor: this._id,
     };
 
-    this.sendRolltoChat(rollData, roll, "healthDieRoll.hbs");
+    this.sendRolltoChat(rollData, roll, "powerDieRoll.hbs");
   }
 
   async addPoolPoints(pool, roll) {

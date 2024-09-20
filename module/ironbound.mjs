@@ -22,7 +22,9 @@ Hooks.once("init", function () {
     ironboundItem,
     ironboundBoonDialog,
     ironboundAddPoolDialog,
+    ironboundDamageDialog,
     ironboundHealDialog,
+    ironboundHealDieDialog,
     rollItemMacro,
   };
 
@@ -125,6 +127,33 @@ Handlebars.registerHelper("isRangedWeapon", function (str) {
   }
 });
 
+Handlebars.registerHelper("is1MarkofDoom", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.system.markofdoom >= 1) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper("is2MarkofDoom", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.system.markofdoom >= 2) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper("is3MarkofDoom", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.system.markofdoom >= 3) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
 Handlebars.registerHelper("isNotPassive", function (passive) {
   if (passive) {
     return false;
@@ -197,6 +226,10 @@ Hooks.on("renderChatMessage", function (message, html, messageData) {
     const el = ev.currentTarget;
     const dataset = el.dataset;
     addPoolPoints(dataset.actorId, dataset.pool, dataset.roll);
+  });
+
+  html.find(".addtohealth").click((ev) => {
+    addToHealth(ev);
   });
 });
 
@@ -273,6 +306,35 @@ function rollDestiny(actor_id, pool, type, formula) {
 function addPoolPoints(actor_id, pool, roll) {
   let actor = game.actors.get(actor_id);
   actor.addPoolPoints(pool, roll);
+}
+
+function rollDmg(ev) {
+  const el = ev.currentTarget;
+  const data = el.dataset;
+  const { actorId, formula, pool, crit, powerdie, weapon } = data;
+  let actor = game.actors.get(actorId);
+  actor.rollDamage(pool, formula, crit, powerdie, weapon);
+}
+
+function rollHeal(ev) {
+  const el = ev.currentTarget;
+  const data = el.dataset;
+  const { actorId, formula, pool, crit, powerdie } = data;
+  let actor = game.actors.get(actorId);
+  actor.rollHeal(pool, formula, crit, powerdie);
+}
+
+function addToHealth(ev) {
+  const el = ev.currentTarget;
+  const data = el.dataset;
+  const { actorId, roll } = data;
+  let actor = game.actors.get(actorId);
+  let newBase = actor.system.health.base + parseInt(roll);
+  let newCurrent = actor.system.health.current + parseInt(roll);
+  actor.update({
+    "system.health.base": newBase,
+    "system.health.current": newCurrent,
+  });
 }
 
 class ironboundBoonDialog extends Application {
@@ -388,37 +450,37 @@ class ironboundAddPoolDialog extends Application {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
-    const pool =  dataset.pool.toLowerCase();
-    const roll = parseInt(dataset.roll)
-    const current = this.actor.system[pool.toLowerCase()].current
+    const pool = dataset.pool.toLowerCase();
+    const roll = parseInt(dataset.roll);
+    const current = this.actor.system[pool.toLowerCase()].current;
     const addingNum = parseInt(dataset.addingnum);
     let updateValue = this.actor.system.rollBoost + addingNum;
-    if(updateValue < 0){
+    if (updateValue < 0) {
       updateValue = 0;
-    }else if(updateValue > 12){
+    } else if (updateValue > 12) {
       updateValue = 12;
-    }else if(updateValue > current){
+    } else if (updateValue > current) {
       updateValue = current;
-    }else if (updateValue > 12-roll){
-      updateValue = 12-roll;
+    } else if (updateValue > 12 - roll) {
+      updateValue = 12 - roll;
     }
     await this.actor.update({ "system.rollBoost": updateValue });
     this.render();
   }
 
-  _addPoolPoints(event){
+  _addPoolPoints(event) {
     const element = event.currentTarget;
     const dataset = element.dataset;
     const pool = dataset.pool;
     const boost = parseInt(dataset.boost);
-    const newRoll = parseInt(dataset.roll) + boost
-    const poolString = `system.${pool.toLowerCase()}.current`
+    const newRoll = parseInt(dataset.roll) + boost;
+    const poolString = `system.${pool.toLowerCase()}.current`;
     const current = this.actor.system[pool.toLowerCase()].current - boost;
-    console.log(poolString)
-    this.actor.update({[poolString]:current})
-    this.actor.addPoolChat(pool,boost, newRoll)
-    this.actor.update({"system.rollBoost": 0});
-    this.close()
+    console.log(poolString);
+    this.actor.update({ [poolString]: current });
+    this.actor.addPoolChat(pool, boost, newRoll);
+    this.actor.update({ "system.rollBoost": 0 });
+    this.close();
   }
 
   // /** @override */
@@ -432,7 +494,7 @@ class ironboundAddPoolDialog extends Application {
   // }
 }
 
-class ironboundHealDialog extends Application {
+class ironboundHealDieDialog extends Application {
   constructor(actor, pool, heal) {
     super();
     this.actor = actor;
@@ -464,8 +526,111 @@ class ironboundHealDialog extends Application {
   activateListeners(html) {
     super.activateListeners(html);
 
-    // html.find(".add-heal-btn").click((ev) => this._heal(ev));
     // html.find(".submit-heal").click((ev) => this._addPoolPoints(ev));
+  }
+}
+
+class ironboundHealDialog extends Application {
+  constructor(actor, pool, formula) {
+    super();
+    this.actor = actor;
+    this.pool = pool;
+    this.formula = formula;
+    this.crit = false;
+    this.powerDie = false;
+  }
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["form"],
+      height: 200,
+      width: 350,
+      popOut: true,
+      template: `systems/ironbound/templates/dialogs/rollHeal.hbs`,
+      id: "roll-dmg",
+      title: "Roll Healing",
+    });
+  }
+
+  getData() {
+    // Send data to the template
+    return {
+      actor: this.actor,
+      pool: this.pool,
+      formula: this.formula,
+      crit: this.crit,
+      powerDie: this.powerDie,
+    };
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    html.find(".rollHeal").click((ev) => {
+      rollHeal(ev);
+      this.close();
+    });
+    html.find(".hasPowerDie").click((ev) => {
+      this.powerDie = !this.powerDie;
+      this.render();
+    });
+
+    html.find(".hasCrit").click((ev) => {
+      this.crit = !this.crit;
+      this.render();
+    });
+  }
+}
+
+class ironboundDamageDialog extends Application {
+  constructor(actor, pool, formula, weaponType) {
+    super();
+    this.actor = actor;
+    this.pool = pool;
+    this.formula = formula;
+    this.crit = false;
+    this.powerDie = false;
+    this.weaponType = weaponType;
+  }
+
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["form"],
+      height: 200,
+      width: 350,
+      popOut: true,
+      template: `systems/ironbound/templates/dialogs/rollDamage.hbs`,
+      id: "roll-dmg",
+      title: "Roll Damage",
+    });
+  }
+
+  getData() {
+    // Send data to the template
+    return {
+      actor: this.actor,
+      pool: this.pool,
+      formula: this.formula,
+      crit: this.crit,
+      powerDie: this.powerDie,
+      weaponType: this.weaponType,
+    };
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+
+    html.find(".rollDmg").click((ev) => {
+      rollDmg(ev);
+      this.close();
+    });
+    html.find(".hasPowerDie").click((ev) => {
+      this.powerDie = !this.powerDie;
+      this.render();
+    });
+
+    html.find(".hasCrit").click((ev) => {
+      this.crit = !this.crit;
+      this.render();
+    });
   }
 }
 

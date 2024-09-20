@@ -31,7 +31,7 @@
         </div>
         {{#if (isDamageItem item)}}
         <div class='item-image'>
-          <a class='roll-damage' data-pool="{{item.system.pool}}" data-formula="{{item.system.formula}}" >
+          <a class='roll-damage' data-pool="{{item.system.pool}}" data-formula="{{item.system.formula}}" data-weapon="Ability">
             <i class="fa-solid fa-heart-crack"></i>
           </a>
         </div>
@@ -47,7 +47,6 @@
       </div>
       <h4 class="item-formula item-prop">{{item.system.formula}}</h4>
       <h4 class="item-formula item-prop">{{#if item.system.heal}}{{item.system.healFormula}}{{/if}}</h4>
-      <input class="item-formula item-prop equipItem" data-item-id="{{item._id}}" type="checkbox" name="system.equipped" {{checked system.equipped}}>
       <div class='item-controls'>
         <a
           class='item-control item-edit'

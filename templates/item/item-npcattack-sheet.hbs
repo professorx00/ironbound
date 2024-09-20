@@ -1,6 +1,6 @@
 <form class="{{cssClass}}" autocomplete="off">
   <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"  width="200px" height="200px"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
     </div>
@@ -44,6 +44,10 @@
         <div class="item-attributes">
           <label for="system.formula">Damage Formula</label>
           <input class="ib_input" type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
+        </div>
+        <div class="item-attributes"></div>
+          <label>Do you have Boon?</label>
+          <input class="" type="checkbox" name="system.hasBoon" {{checked system.hasBoon}}>
         </div>
         <div class="item-attributes">
           <label>Does attack heal?</label>

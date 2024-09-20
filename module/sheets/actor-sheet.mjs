@@ -265,6 +265,9 @@ export class ironboundActorSheet extends ActorSheet {
     html.on("click", ".healthDiceSelect", this._setHealthDie.bind(this));
     html.on("click", ".info", this._toggleDescription.bind(this));
     html.on("click", ".rollDestinyDie-btn", this._rollDestinyDie.bind(this));
+    html.on("click", ".clickDoom", this._handleDoom.bind(this));
+    html.on("click", ".clickShortRest", this._handleShortRest.bind(this));
+    html.on("click", ".clickLongRest", this._handleLongRest.bind(this));
     html.on(
       "click",
       ".refresh-actionPoints-btn",
@@ -359,7 +362,14 @@ export class ironboundActorSheet extends ActorSheet {
     const dataset = el.dataset;
     const pool = dataset.pool;
     const heal = dataset.heal;
-    this.actor.rollHeal(pool, heal);
+    console.log(heal, pool);
+    const dialog = new game.ironbound.ironboundHealDialog(
+      this.actor,
+      pool,
+      heal
+    );
+    dialog.render(true);
+    // this.actor.rollHeal(pool, heal);
   }
 
   _onRollDamage(event) {
@@ -367,7 +377,16 @@ export class ironboundActorSheet extends ActorSheet {
     const dataset = el.dataset;
     const pool = dataset.pool;
     const formula = dataset.formula;
-    this.actor.rollDamage(pool, formula);
+    const weapon = dataset.weapon;
+    const dialog = new game.ironbound.ironboundDamageDialog(
+      this.actor,
+      pool,
+      formula,
+      weapon
+    );
+
+    dialog.render(true);
+    // this.actor.rollDamage(pool, formula);
   }
 
   _onRollPool(event) {
@@ -535,7 +554,44 @@ export class ironboundActorSheet extends ActorSheet {
     const dataset = element.dataset;
     const formula = dataset.formula;
     const pool = dataset.pool;
-    console.log(formula, pool)
+    console.log(formula, pool);
     this.actor.rollPower(formula, pool);
+  }
+
+  _handleDoom(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const mark = parseInt(dataset.mark);
+    let doom = this.actor.system.markofdoom + mark;
+    let current = this.actor.system.currentBoons;
+    let newcurrent = current + -1 * mark;
+    this.actor.update({
+      "system.markofdoom": doom,
+      "system.currentBoons": newcurrent,
+    });
+  }
+
+  _handleShortRest(event) {
+    console.log("Short Rest");
+  }
+
+  async _handleLongRest(event) {
+    console.log("Long Rest");
+    let healthFormula = this.actor.system.healthDie;
+    let poolFormula = "1d12";
+    let healthRoll = await new Roll(healthFormula).evaluate();
+    let poolRoll = await new Roll(poolFormula).evaluate();
+    let newHealth =
+      this.actor.system.health.current + healthRoll._total >
+      this.actor.system.health.base
+        ? this.actor.system.health.base
+        : this.actor.system.health.current + healthRoll._total;
+    console.log(newHealth);
+    this.actor.update({
+      "system.markofdoom": 0,
+      "system.currentBoons": 0,
+      "system.health.current": newHealth,
+    });
+    console.log("doom2", this.actor.system.markofdoom);
   }
 }

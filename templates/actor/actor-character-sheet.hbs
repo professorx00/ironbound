@@ -1,78 +1,123 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
 
   {{!-- Sheet Header --}}
-  <header class="sheet-header">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-    <div class="header-fields">
+  <header class="sheet-header actor">
+    <div class="imgContainer">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+        <div>
+          Marks of Doom
+        </div>
+        <div class="doomContainer">
+          <div>
+            {{#if (is1MarkofDoom actor._id)}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/color-skull.png" />
+            </a>
+            {{else}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/skull.png" />
+            </a>
+            {{/if}}
+          </div>
+          <div>
+            {{#if (is2MarkofDoom actor._id)}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/color-skull.png" />
+            </a>
+            {{else}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/skull.png" />
+            </a>
+            {{/if}}
+          </div>
+          <div>
+            {{#if (is3MarkofDoom actor._id)}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/color-skull.png" />
+            </a>
+            {{else}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/skull.png" />
+            </a>
+            {{/if}}
+          </div>
+        </div>
+        <div class="doomContainer">
+          <a class="clickShortRest"><i class="fa-solid fa-mug-saucer"></i></a>
+          <a class="clickLongRest"><i class="fa-solid fa-bed"></i></a>
+        </div>
+    </div>
+    <div class="header-fields actor">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <div class="classRow"><h1 class="charClass"><input name="class" type="text" value="{{characterClass.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{characterClass._id}}"><i class="fa-solid fa-trash"></i></a></div>
       <div class="classRow"><h1 class="species"><input name="species" type="text" value="{{species.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{species._id}}"><i class="fa-solid fa-trash"></i></a></div>
       <div class="stat-row">
-        <div>
+        <div class="stat-item">
           <label>Level</label>
-          <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number"/>
+          <input class="actorInput" type="text" name="system.level" value="{{system.level}}" data-dtype="Number"/>
         </div>
-        <div>
+        <div class="stat-item">
           <label>Movement</label>
-          <input type="text" name="system.movement" value="{{system.movement}}" data-dtype="Number"/>
+          <input class="actorInput" type="text" name="system.movement" value="{{system.movement}}" data-dtype="Number"/>
         </div>
-        <div>
+        <div class="stat-item">
           <label>Damage Bonus</label>
-          <input type="text" name="system.damageBonus" value="{{system.damageBonus}}" data-dtype="Number"/>
+          <input class="actorInput" type="text" name="system.damageBonus" value="{{system.damageBonus}}" data-dtype="Number"/>
         </div>
-        <div>
+        <div class="stat-item">
           <label>To Hit</label>
-          <input type="text" name="system.toHit" value="{{system.toHit}}" data-dtype="Number"/>
+          <input class="actorInput" type="text" name="system.toHit" value="{{system.toHit}}" data-dtype="Number"/>
         </div>
       </div>
       <div class="stat-row">
-        <div>
+        <div class="stat-item m20">
           <label>Health</label>
          <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="health"><i class="fa-solid fa-plus"></i></a>
-            <input type="number" name="system.health.current" value="{{system.health.current}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.health.current" value="{{system.health.current}}" data-dtype="Number"/>
             <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
-            <input type="number" name="system.health.base" value="{{system.health.base}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.health.base" value="{{system.health.base}}" data-dtype="Number"/>
             <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="health"><i class="fa-solid fa-minus"></i></a>
             <a class="resetPool refresh-btn" data-pool="health"><i class="fa-solid fa-repeat"></i></a>
           </div> 
         </div>
-        <div>
+        <div class="stat-item m20">
           <label><a class="rollHealthDie" data-pool="health" data-formula="{{system.healthDie}}">Health Die</a></label>
           <div>
-            <select name="healthDice" class="healthDiceSelect">
+            <select name="healthDice" class="healthDiceSelect actorInput">
               {{selectOptions system.healthDice selected=system.healthDie}}
             </select>
           </div>
         </div>
-        <div>
+        <div class="stat-item m20">
           <label for="system.actionPoints">Action Points</label>
          <div class="ironbound-row">
             <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="1"><i class="fa-solid fa-plus"></i></a>
-            <input type="number" name="system.actionPoints" value="{{system.actionPoints}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.actionPoints" value="{{system.actionPoints}}" data-dtype="Number"/>
             <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="-1"><i class="fa-solid fa-minus"></i></a>
             <a class="resetPool refresh-actionPoints-btn" ><i class="fa-solid fa-repeat"></i></a>
           </div> 
         </div>
-        <div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-item m20">
           <label><a class="rollPowerDie" data-roll-type='power' data-pool="Power" data-actor-id="{{actor._id}}" data-formula="{{system.powerDie}}">Power Die</a></label>
           <div>
-            <select name="powerDice" class="powerDiceSelect">
+            <select name="powerDice" class="powerDiceSelect actorInput" >
               {{selectOptions system.powerDice selected=system.powerDie}}
             </select>
           </div>
         </div>
-        <div>
+        <div class="stat-item m20">
           <label>Destiny Die</label>
          <div class="ironbound-row">
             {{#if (hasDestinyDie system.destinyDie)}}
             <a class="rollDestinyDie-btn" data-pool="destiny" data-formula="1d12"><i class="fa-solid fa-dice-d12"></i></a>
             {{/if}}
-            <input type="number" name="system.destinyDie" value="{{system.destinyDie}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.destinyDie" value="{{system.destinyDie}}" data-dtype="Number"/>
             <a class="resetPool destinyRefresh-btn" data-pool="destiny"><i class="fa-solid fa-repeat"></i></a>
           </div> 
         </div>
-
       </div>
     </div>
   </header>
@@ -82,45 +127,45 @@
           <label for="system.arcane.current" class="pool-point-label-arcane "><a class="rollPool" data-roll-type='pool' data-pool="Arcane" data-actor-id="{{actor._id}}"><h3>Arcane</h3></a></label>
           <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="arcane"><i class="fa-solid fa-plus"></i></a>
-            <input type="number" name="system.arcane.current" value="{{system.arcane.current}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.arcane.current" value="{{system.arcane.current}}" data-dtype="Number"/>
             <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
-            <input type="number" name="system.arcane.base" value="{{system.arcane.base}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.arcane.base" value="{{system.arcane.base}}" data-dtype="Number"/>
             <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="arcane"><i class="fa-solid fa-minus"></i></a>
             <a class="resetPool refresh-btn" data-pool="arcane"><i class="fa-solid fa-repeat"></i></a>
           </div> 
            <div class="def-attribute">
             <h3>Defense</h3>
-            <input type="number" name="system.arcane.def" value="{{system.arcane.def}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.arcane.def" value="{{system.arcane.def}}" data-dtype="Number"/>
            </div> 
         </div>
       <div class="physical-holder">
           <label for="system.physical.current" class="pool-point-label-physical "><a class="rollPool" data-roll-type='pool' data-pool="Physical" data-actor-id="{{actor._id}}"><h3>Physical</h3></a></label>
           <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="physical"><i class="fa-solid fa-plus"></i></a>
-            <input type="number" name="system.physical.current" value="{{system.physical.current}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.physical.current" value="{{system.physical.current}}" data-dtype="Number"/>
             <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
-            <input type="number" name="system.physical.base" value="{{system.physical.base}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.physical.base" value="{{system.physical.base}}" data-dtype="Number"/>
             <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="physical"><i class="fa-solid fa-minus"></i></a>
             <a class="resetPool refresh-btn" data-pool="physical"><i class="fa-solid fa-repeat"></i></a>
           </div> 
            <div class="def-attribute">
             <h3>Defense</h3>
-            <input type="number" name="system.physical.def" value="{{system.physical.def}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.physical.def" value="{{system.physical.def}}" data-dtype="Number"/>
            </div> 
         </div>
       <div class="mental-holder">
           <label for="system.mental.current" class="pool-point-label-mental "><a class="rollPool" data-roll-type='pool' data-pool="Mental" data-actor-id="{{actor._id}}"><h3>Mental</h3></a></label>
           <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="mental"><i class="fa-solid fa-plus"></i></a>
-            <input type="number" name="system.mental.current" value="{{system.mental.current}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.mental.current" value="{{system.mental.current}}" data-dtype="Number"/>
             <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
-            <input type="number" name="system.mental.base" value="{{system.mental.base}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.mental.base" value="{{system.mental.base}}" data-dtype="Number"/>
             <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="mental"><i class="fa-solid fa-minus"></i></a>
             <a class="resetPool refresh-btn" data-pool="mental"><i class="fa-solid fa-repeat"></i></a>
           </div> 
            <div class="def-attribute">
             <h3>Defense</h3>
-            <input type="number" name="system.mental.def" value="{{system.mental.def}}" data-dtype="Number"/>
+            <input class="actorInput" type="number" name="system.mental.def" value="{{system.mental.def}}" data-dtype="Number"/>
            </div> 
         </div>
     </div>

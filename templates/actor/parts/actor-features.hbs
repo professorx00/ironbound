@@ -1,6 +1,6 @@
 <ol class='items-list'>
   <li>
-    <h1>Active</h1>
+    <h2>Active</h2>
   </li>
   <li class='item flexrow items-header'>
     <div class='item-name'>{{localize 'Name'}}</div>
@@ -33,7 +33,7 @@
         </div>
         {{#if (isDamageItem item)}}
         <div class='item-image'>
-          <a class='roll-damage' data-pool="{{item.system.pool}}" data-formula="{{item.system.formula}}" >
+          <a class='roll-damage' data-pool="{{item.system.pool}}" data-formula="{{item.system.formula}}" data-weapon="">
             <i class="fa-solid fa-heart-crack"></i>
           </a>
         </div>
@@ -79,7 +79,7 @@
     </li>
   {{/each}}
   <li>
-    <h1>Passive</h1>
+    <h2>Passive</h2>
   </li>
   <li class='item flexrow items-header'>
     <div class='item-name'>{{localize 'Name'}}</div>

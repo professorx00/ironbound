@@ -2,7 +2,9 @@
 
   {{!-- Sheet Header --}}
   <header class="sheet-header">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+    <div class="imgContainer">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    </div>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <h1 class="charname"><input name="weakness" type="text" value="{{actor.system.weakness}}" placeholder="Weakness"/></h1>
@@ -12,7 +14,7 @@
   </header>
     <div class="sheet-stats">
       <div class="stat-row">
-          <div>
+          <div class="stat-item m10">
             <label>Health</label>
           <div class="ironbound-row">
               <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="health"><i class="fa-solid fa-plus"></i></a>
@@ -23,7 +25,7 @@
               <a class="resetPool refresh-btn" data-pool="health"><i class="fa-solid fa-repeat"></i></a>
             </div> 
           </div>
-          <div>
+          <div class="stat-item m10">
             <label>Power</label>
           <div class="ironbound-row">
               <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="power"><i class="fa-solid fa-plus"></i></a>
@@ -34,7 +36,7 @@
               <a class="resetPool refresh-btn" data-pool="health"><i class="fa-solid fa-repeat"></i></a>
             </div> 
           </div>
-          <div>
+          <div class="stat-item m10">
             <label for="system.actionPoints">Action Points</label>
           <div class="ironbound-row">
               <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="1"><i class="fa-solid fa-plus"></i></a>
@@ -45,15 +47,15 @@
           </div>
       </div>
       <div class="stat-row">
-        <div class="targetNumber">
+        <div class="targetNumber stat-item m10">
             <label for="system.tn">Target Number</label>
             <input type="number" name="system.tn" value="{{system.tn}}" data-dtype="Number"/>
           </div>
-          <div class="targetNumber">
+          <div class="targetNumber stat-item m10">
             <label for="system.movement">Movement</label>
             <input type="number" name="system.movement" value="{{system.movement}}" data-dtype="Number"/>
           </div>
-          <div>
+          <div class="stat-item m10">
             <label><a class="rollPowerDie" data-roll-type='power' data-pool="Power" data-actor-id="{{actor._id}}" data-formula="{{system.powerDie}}">Power Die</a></label>
             <div>
               <select name="powerDice" class="powerDiceSelect">

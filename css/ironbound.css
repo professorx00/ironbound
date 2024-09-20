@@ -9,12 +9,17 @@
 
 .window-app .window-content{
   background:#fefbea;
+  background: url(../assets/background2.jpg);
 } 
 
 .window-app .window-header{
   background: #191813;
+  
 }
 
+.sheet header.sheet-header > *{
+  flex: 0.58;
+}
 
 .sheet nav.sheet-tabs{
   margin: 0;
@@ -23,11 +28,12 @@
 
 .sheet nav.sheet-tabs > [data-tab] {
   background: azure;
-  border-top: #000 2px solid;
-  border-left: #000 2px solid;
-  border-right: #000 2px solid;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border: #000 2px solid;
+  border-radius: 10px;
+}
+
+.sheet.journal-entry .window-content{
+  background: black;
 }
 
 
@@ -233,22 +239,19 @@
   background:white;
 }
 
-.ironbound .sheet-header {
+.ironbound .sheet-header .actor{
   overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height:fit-content;
-  background: url(../assets/background2.jpg);
+  min-height: 350px;
 }
+
 .ironbound .sheet-header .profile-img {
-  flex: 0 0 200px;
-  height: 200px;
-  margin-right: 10px;
+  height: 100%;
 }
 .ironbound .sheet-header .header-fields {
   flex: 1;
-
 }
 
 .ironbound .sheet-header h1.charname {
@@ -257,7 +260,31 @@
   margin: 5px 0;
   border-bottom: 0;
 }
+
+.ironbound .sheet-header h1.charClass {
+  height: 50px;
+  padding: 0px;
+  margin: 5px 0;
+  border-bottom: 0;
+}
+
+.ironbound .sheet-header h1.species {
+  height: 50px;
+  padding: 0px;
+  margin: 5px 0;
+  border-bottom: 0;
+}
 .ironbound .sheet-header h1.charname input {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.ironbound .sheet-header h1.charClass input {
+  width: 100%;
+  height: 100%;
+  margin: 0 5px 0 0;
+}
+.ironbound .sheet-header h1.species input {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -271,7 +298,7 @@
 .ironbound .sheet-body .tab,
 .ironbound .sheet-body .tab .editor {
   height: 100%;
-  background-color: azure;
+  background-color: transparent;
 }
 
 .ironbound .sheet-boon {
@@ -285,6 +312,9 @@
 .sheet .editor-content{
   border: black solid 2px;
   padding: 10px;
+  margin: 5px;
+  background:#c9c7b86f;
+  height: 300px;
 }
 
 .ironbound .tox .tox-editor-container {
@@ -301,7 +331,6 @@
   margin: 2px 0;
   padding: 0;
   align-items: center;
-  background: rgba(0, 0, 0, 0.05);
   /* border: 2px groove #eeede0; */
   font-weight: bold;
 }
@@ -322,6 +351,7 @@
   overflow-y: auto;
   scrollbar-width: thin;
   color: #444;
+  background: #c9c7b853;
 }
 .ironbound .items-list .item-list {
   list-style: none;
@@ -381,7 +411,7 @@
   margin: 2px 0;
   padding: 0;
   align-items: center;
-  background: rgba(0, 0, 0, 0.05);
+  background:#c9c7b86f;
   border: 2px groove #eeede0;
   font-weight: bold;
 }
@@ -471,6 +501,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  margin-top: 5px;
 }
 
 .arcane-holder{
@@ -581,16 +612,20 @@
 .stat-row{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
+  border: 2px solid black;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 10px;
+  background: #c9c7b8aa;
 }
 
 .boons-banes{
   display: flex;
   flex-direction: column;
   width:50%;
-  height: 120px;
   padding: 3px;
 
 }
@@ -802,6 +837,32 @@
   margin: 3px;
 }
 
+.clickShortRest{
+  width: 35px;
+  height: 35px;
+  background-color: #444;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#c9c7b8;
+  margin: 3px;
+  padding: 4px;
+}
+
+.clickLongRest{
+  width: 35px;
+  height: 35px;
+  background-color: #444;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#c9c7b8;
+  margin: 3px;
+  padding: 4px;
+}
+
 .refresh-actionPoints-btn{
    width: 25px;
   height: 25px;
@@ -830,5 +891,136 @@
 }
 
 .sheet-stats{
-  flex: 0.35;
+  flex: 0.45;
+}
+
+.stat-item{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.m20{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.mark-of-doom{
+  border: none;
+  background: transparent;
+  height: 25px !important;
+  width: 25px !important;
+  margin: 6 !important;
+
+}
+
+.doomContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+}
+
+.imgContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 220px;
+  height: 100%;
+  background: #c9c7b896;
+  margin: 5px;
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.m10{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.deleteClass{
+  margin: 6px;
+}
+
+.actorInput{
+  text-align: center !important;
+}
+
+.critTitle{
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  border: solid black 2px;
+}
+.critRoll{
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  border: none;
+}
+
+.critFormula{
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  border: none;
+}
+
+.critHolder{
+  background: crimson;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border:#000 solid 2px;
+}
+
+.healRollData{
+  background:#729e71;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border:#000 solid 2px;
+}
+
+.rollcontainers{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.rollPage{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.rollBtn{
+  width: 100%;
+  height: 25px;
+  background-color: #444;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#c9c7b8;
+  margin: 3px;
+}
+
+.addtohealth{
+    width: 100%;
+  height: 25px;
+  background-color: #c9c7b8 ;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:#444;
+  margin: 3px;
 }

@@ -41,6 +41,11 @@ export default class ironboundCharacter extends ironboundActorBase {
       initial: 3,
     });
 
+    schema.markofdoom = new fields.NumberField({
+      ...requiredInteger,
+      initial: 0,
+    });
+
     schema.powerDice =  new fields.SchemaField({
       "1D4": new fields.StringField({initial: "1D4"}),
       "1D6": new fields.StringField({initial: "1D6"}),
