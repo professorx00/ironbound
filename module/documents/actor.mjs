@@ -302,7 +302,6 @@ export class ironboundActor extends Actor {
       criticalFailure,
       destinyDice: destinyDice,
       formula: formula,
-      actor: this._id,
     };
 
     this.sendRolltoChat(rollData, roll, "healthDieRoll.hbs");
@@ -370,6 +369,28 @@ export class ironboundActor extends Actor {
       speaker: ChatMessage.getSpeaker({ actor: this }),
     };
     ChatMessage.create(chatOptions);
+  }
+
+  async healthRestRoll(formula) {
+    let healthRoll = await new Roll(formula).evaluate();
+    const rollData = {
+      rollHTML: await healthRoll.render(),
+      roll: healthRoll._total,
+      roll_type: "Health Rest Roll",
+      actor: this._id,
+      formula: formula,
+    };
+    this.sendRolltoChat(rollData, healthRoll, "healthRestRoll.hbs");
+
+    return healthRoll._total;
+  }
+
+  async poolRestRoll(formula){
+     let poolRoll = await new Roll(formula).evaluate();
+     let poolAllocationDialog =
+       new game.ironbound.ironboundPoolAllocationDialog(this, poolRoll._total);
+
+    poolAllocationDialog.render(true)
   }
 
   /**

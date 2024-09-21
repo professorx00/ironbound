@@ -560,15 +560,29 @@ export class ironboundActorSheet extends ActorSheet {
     });
   }
 
-  _handleShortRest(event) {
-    console.log("Short Rest");
+  async _handleShortRest(event) {
+    let healthFormula = this.actor.system.healthDie;
+    let healthRoll = await this.actor.healthRestRoll(healthFormula);
+    let newHealth = this.actor.system.health.current + healthRoll;
+    if (newHealth > this.actor.system.health.base) {
+      newHealth = this.actor.system.health.base;
+    }
+    let poolRoll = await this.actor.poolRestRoll("1d12");
+
+    this.actor.update({
+      //   "system.markofdoom": 0,
+      //   "system.currentBoons": 0,
+      "system.health.current": newHealth,
+      //   "system.physical.current": this.actor.system.physical.base,
+      //   "system.mental.current": this.actor.system.mental.base,
+      //   "system.arcane.current": this.actor.system.arcane.base,
+    });
   }
 
   async _handleLongRest(event) {
     let healthFormula = this.actor.system.healthDie;
     let poolFormula = "1d12";
     let healthRoll = await new Roll(healthFormula).evaluate();
-    let poolRoll = await new Roll(poolFormula).evaluate();
     let newHealth =
       this.actor.system.health.current + healthRoll._total >
       this.actor.system.health.base
@@ -577,7 +591,10 @@ export class ironboundActorSheet extends ActorSheet {
     this.actor.update({
       "system.markofdoom": 0,
       "system.currentBoons": 0,
-      "system.health.current": newHealth,
+      "system.health.current": this.actor.system.health.base,
+      "system.physical.current": this.actor.system.physical.base,
+      "system.mental.current": this.actor.system.mental.base,
+      "system.arcane.current": this.actor.system.arcane.base,
     });
     console.log("doom2", this.actor.system.markofdoom);
   }

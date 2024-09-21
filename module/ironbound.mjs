@@ -26,6 +26,7 @@ Hooks.once("init", function () {
     ironboundHealDialog,
     ironboundHealDieDialog,
     ironboundErrorDialog,
+    ironboundPoolAllocationDialog,
     rollItemMacro,
   };
 
@@ -350,6 +351,119 @@ function addToHealth(ev) {
     "system.health.current": newCurrent,
   });
 }
+
+class ironboundPoolAllocationDialog extends Application {
+  constructor(actor, roll) {
+    super();
+    this.actor = actor;
+    this.roll = roll;
+    this.physicalAllocation = 0;
+    this.arcaneAllocation = 0;
+    this.mentalAllocation = 0;
+    this.left = parseInt(this.roll);
+  }
+
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["form"],
+      height: 300,
+      width: 450,
+      popOut: true,
+      template: `systems/ironbound/templates/dialogs/poolAllocationDialog.hbs`,
+      id: "pool-allocation",
+      title: "Pool Allocation",
+    });
+  }
+
+  getData() {
+    // Send data to the template
+    return {
+      actor: this.actor,
+      roll: this.roll,
+      physicalAllocation: this.physicalAllocation,
+      arcaneAllocation: this.arcaneAllocation,
+      mentalAllocation: this.mentalAllocation,
+      left: this.left,
+    };
+  }
+
+  async changeAllocation(event) {
+    const el = event.currentTarget;
+    const data = el.dataset;
+    const { poolpoint, pool } = data;
+    const point = parseInt(poolpoint);
+    let total =
+      this.arcaneAllocation +
+      this.mentalAllocation +
+      this.physicalAllocation +
+      point;
+
+    const arcane = this.actor.system.arcane;
+    const physical = this.actor.system.physical;
+    const mental = this.actor.system.mental;
+
+    let newArcane = this.arcaneAllocation + arcane.current;
+    let newPhysical = this.physicalAllocation + physical.current;
+    let newMental = this.mentalAllocation + mental.current;
+
+    if (total <= parseInt(this.roll)) {
+      if (pool == "arcane") {
+        if (this.arcaneAllocation + point < 0) {
+          this.arcaneAllocation = 0;
+        } else if (newArcane + point > arcane.base) {
+          this.arcaneAllocation = this.arcaneAllocation;
+        } else {
+          this.arcaneAllocation = this.arcaneAllocation + point;
+          this.left = this.left + -1 * point;
+        }
+        this.render();
+      } else if (pool == "physical") {
+        if (this.physicalAllocation + point < 0) {
+          this.physicalAllocation = 0;
+        } else if (newPhysical + point > physical.base) {
+          this.physicalAllocation = this.physicalAllocation;
+        } else {
+          this.physicalAllocation = this.physicalAllocation + point;
+          this.left = this.left + -1 * point;
+        }
+        this.render();
+      } else if (pool == "mental") {
+        if (this.mentalAllocation + point < 0) {
+          this.mentalAllocation = 0;
+        } else if (newMental + point > mental.base) {
+          this.mentalAllocation = this.mentalAllocation;
+        } else {
+          this.mentalAllocation = this.mentalAllocation + point;
+          this.left = this.left + -1 * point;
+        }
+        this.render();
+      }
+    }
+  }
+
+  async handleAllocation(event) {
+    const arcane = this.actor.system.arcane.current + this.arcaneAllocation;
+    const physical =
+      this.actor.system.physical.current + this.physicalAllocation;
+    const mental = this.actor.system.mental.current + this.mentalAllocation;
+
+    this.actor.update({
+      "system.arcane.current": arcane,
+      "system.physical.current": physical,
+      "system.mental.current": mental,
+    });
+
+    this.close();
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    html.find(".change-allocation").click((ev) => this.changeAllocation(ev));
+    html.find(".handleAllocation").click((ev) => this.handleAllocation(ev));
+  }
+}
+
+
 
 class ironboundErrorDialog extends Application {
   constructor(actor, error) {

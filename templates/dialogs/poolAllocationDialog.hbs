@@ -1,0 +1,35 @@
+
+<div>
+    <h1>You Rolled {{roll}}</h1>
+    <h2>You have left... {{left}}</h2>
+    <div class="flexrow">
+        <div class="arcane-holder">
+            <h4>Arcane</h4>
+            <h5  class="poolCurrent">Current: {{actor.system.arcane.current}}</h5>
+            <div class="ironbound-row">
+                <a class="change-allocation"  data-poolpoint="1" data-pool="arcane"><i class="fa-solid fa-plus"></i></a>
+                <input class="actorInput" type="number" name="allocation.arcane" value="{{arcaneAllocation}}" data-dtype="Number"/>
+                <a class="change-allocation"  data-poolpoint="-1" data-pool="arcane"><i class="fa-solid fa-minus"></i></a>
+            </div>
+        </div>
+         <div class="physical-holder">
+            <h4>Physical</h4>
+            <h5 class="poolCurrent">Current: {{actor.system.physical.current}}</h5>
+            <div class="ironbound-row">
+                <a class="change-allocation"  data-poolpoint="1" data-pool="physical"><i class="fa-solid fa-plus"></i></a>
+                <input class="actorInput" type="number" name="allocation.physical" value="{{physicalAllocation}}" data-dtype="Number"/>
+                <a class="change-allocation"  data-poolpoint="-1" data-pool="physical"><i class="fa-solid fa-minus"></i></a>
+            </div>
+        </div>
+         <div class="mental-holder">
+            <h4>Mental</h4>
+            <h5  class="poolCurrent">Current: {{actor.system.mental.current}}</h5>
+            <div class="ironbound-row">
+                <a class="change-allocation"  data-poolpoint="1" data-pool="mental"><i class="fa-solid fa-plus"></i></a>
+                <input class="actorInput" type="number" name="allocation.mental" value="{{mentalAllocation}}" data-dtype="Number"/>
+                <a class="change-allocation"  data-poolpoint="-1" data-pool="mental"><i class="fa-solid fa-minus"></i></a>
+            </div>
+        </div>
+    </div>
+    <a class="handleAllocation btn">Allocate Pools</a>
+</div>
