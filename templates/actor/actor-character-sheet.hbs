@@ -50,7 +50,7 @@
     <div class="header-fields actor">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <div class="classRow"><h1 class="charClass"><input name="class" type="text" value="{{characterClass.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{characterClass._id}}"><i class="fa-solid fa-trash"></i></a></div>
-      <div class="classRow"><h1 class="species"><input name="species" type="text" value="{{species.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{species._id}}"><i class="fa-solid fa-trash"></i></a></div>
+      <div class="classRow"><h1 class="species"><input name="species" type="text" value="{{species.name}}" placeholder="Species"/></h1><a class="deleteClass" data-class-id="{{species._id}}"><i class="fa-solid fa-trash"></i></a></div>
       <div class="stat-row">
         <div class="stat-item">
           <label>Level</label>
@@ -238,6 +238,7 @@
     {{/if}}
     <a class="item" data-tab="features">Feats</a>
     <a class="item" data-tab="flaws">Flaws</a>
+    <a class="item" data-tab="fightingstances">Fighting Stances</a>
     <a class="item" data-tab="factions">factions</a>
     <a class="item" data-tab="magicalSocieties">Magical Societies</a>
     <a class="item" data-tab="items">Items</a>
@@ -261,6 +262,10 @@
     <div class="tab flaws" data-tab="flaws">
       {{> "systems/ironbound/templates/actor/parts/actor-flaws.hbs"}}
     </div>
+    <div class="tab fightingstances" data-tab="fightingstances">
+      {{> "systems/ironbound/templates/actor/parts/actor-fightingstances.hbs"}}
+    </div>
+
     <div class="tab magicalSocieties" data-tab="magicalSocieties">
       {{> "systems/ironbound/templates/actor/parts/actor-magicalSocieties.hbs"}}
     </div>

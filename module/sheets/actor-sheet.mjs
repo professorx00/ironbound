@@ -132,7 +132,7 @@ export class ironboundActorSheet extends ActorSheet {
     const weapons = [];
     const magicalSocieties = [];
     const defenseitems = [];
-    const fightingStances = [];
+    const fightingstances = [];
     const favorites = [];
     const npcattack = [];
     const npcability = [];
@@ -140,6 +140,7 @@ export class ironboundActorSheet extends ActorSheet {
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || Item.DEFAULT_ICON;
+      console.log(i.type);
       // Append to gear.
       if (i.system.fav) {
         favorites.push(i);
@@ -176,8 +177,8 @@ export class ironboundActorSheet extends ActorSheet {
         magicalSocieties.push(i);
       } else if (i.type === "defenseitems") {
         defenseitems.push(i);
-      } else if (i.type === "fightingStances") {
-        fightingStances.push(i);
+      } else if (i.type === "fightingstances") {
+        fightingstances.push(i);
       } else if (i.type === "npcattack") {
         npcattack.push(i);
       } else if (i.type === "npcability") {
@@ -185,6 +186,7 @@ export class ironboundActorSheet extends ActorSheet {
       }
     }
 
+    console.log(fightingstances);
     // Assign and return
     context.gear = gear;
     context.activeFeats = activeFeats;
@@ -201,7 +203,7 @@ export class ironboundActorSheet extends ActorSheet {
     context.weapons = weapons;
     context.magicalSocieties = magicalSocieties;
     context.defenseitems = defenseitems;
-    context.fightingStances = fightingStances;
+    context.fightingstances = fightingstances;
     context.favorites = favorites;
     context.npcattack = npcattack;
     context.npcability = npcability;

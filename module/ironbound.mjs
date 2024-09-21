@@ -64,7 +64,7 @@ Hooks.once("init", function () {
     potions: models.ironboundPotions,
     wands: models.ironboundWands,
     weapons: models.ironboundWeapons,
-    fightingStances: models.ironboundFightingStances,
+    fightingstances: models.ironboundFightingStances,
     factions: models.ironboundFactions,
     species: models.ironboundSpecies,
     scrolls: models.ironboundScrolls,

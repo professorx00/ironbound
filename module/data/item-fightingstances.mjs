@@ -17,6 +17,16 @@ export default class ironboundFightingStances extends ironboundItemBase {
       initial: 0,
     });
 
+    schema.heal = new fields.BooleanField();
+
+    schema.formula = new fields.StringField({
+      blank: true,
+    });
+
+    schema.healFormula = new fields.StringField({
+      blank: true,
+    });
+
     schema.activated = new fields.BooleanField();
 
     return schema;

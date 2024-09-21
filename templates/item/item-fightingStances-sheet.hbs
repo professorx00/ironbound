@@ -32,7 +32,7 @@
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
       {{!-- As you add new fields, add them in here! --}}
-       <div class="flex">
+      <div class="flex">
         <div class="item-attributes">
           <label for="system.actionPoints">Action Points Required</label>
           <input class="ib_input num-field" type="number" name="system.actionPoints" value="{{system.actionPoints}}" data-dtype="Number"/>
@@ -44,15 +44,15 @@
           </select>
         </div>
         <div class="item-attributes">
+          <label for="system.poolPointCost">Pool Point Cost</label>
+          <input class="ib_input num-field" type="number" name="system.poolPointCost" value="{{system.poolPointCost}}" data-dtype="Number"/>
+        </div>
+        <div class="item-attributes">
           <label for="system.formula">Damage Formula</label>
           <input class="ib_input" type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
         </div>
         <div class="item-attributes">
-          <label>Do you have Boon?</label>
-          <input class="" type="checkbox" name="system.hasBoon" {{checked system.hasBoon}}>
-        </div>
-        <div class="item-attributes">
-          <label>Does potion heal?</label>
+          <label>Does society heal?</label>
           <input class="" type="checkbox" name="system.heal" {{checked system.heal}}>
         </div>
         {{#if system.heal}}

@@ -47,7 +47,7 @@
           <label for="system.poolPointCost">Pool Point Cost</label>
           <input class="ib_input num-field" type="number" name="system.poolPointCost" value="{{system.poolPointCost}}" data-dtype="Number"/>
         </div>
-        <div class="item-attributes"></div>
+        <div class="item-attributes">
           <label>Do you have Boon?</label>
           <input class="" type="checkbox" name="system.hasBoon" {{checked system.hasBoon}}>
         </div>
@@ -56,7 +56,7 @@
           <input class="ib_input" type="text" name="system.formula" value="{{system.formula}}" data-dtype="String"/>
         </div>
         <div class="item-attributes">
-          <label>Does society heal?</label>
+          <label>Does fighting stance heal?</label>
           <input class="" type="checkbox" name="system.heal" {{checked system.heal}}>
         </div>
         {{#if system.heal}}
