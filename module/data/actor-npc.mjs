@@ -31,6 +31,11 @@ export default class ironboundNPC extends ironboundActorBase {
       initial: 2,
     });
 
+    schema.damageReduction = new fields.NumberField({
+      ...requiredInteger,
+      initial: 2,
+    });
+
     schema.powerDie = new fields.StringField({ initial: "1D4" });
 
     schema.powerDice = new fields.SchemaField({
