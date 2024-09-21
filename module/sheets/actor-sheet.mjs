@@ -567,15 +567,19 @@ export class ironboundActorSheet extends ActorSheet {
     if (newHealth > this.actor.system.health.base) {
       newHealth = this.actor.system.health.base;
     }
-    let poolRoll = await this.actor.poolRestRoll("1d12");
+    await this.actor.poolRestRoll("1d12");
+    let marksofdoom = this.actor.system.markofdoom;
+    console.log("Marks of Doom", marksofdoom);
+    if (marksofdoom > 0) {
+      marksofdoom = marksofdoom - 1;
+      if (marksofdoom < 0) {
+        marksofdoom = 0;
+      }
+    }
 
     this.actor.update({
-      //   "system.markofdoom": 0,
-      //   "system.currentBoons": 0,
+      "system.markofdoom": marksofdoom,
       "system.health.current": newHealth,
-      //   "system.physical.current": this.actor.system.physical.base,
-      //   "system.mental.current": this.actor.system.mental.base,
-      //   "system.arcane.current": this.actor.system.arcane.base,
     });
   }
 
