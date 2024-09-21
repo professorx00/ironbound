@@ -139,6 +139,7 @@ export class ironboundActor extends Actor {
       newFormula = this.changeFormula(newFormula);
       critdie = true;
     }
+    newFormula = newFormula +"+"+ this.system.damageBonus;
     let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
@@ -181,6 +182,8 @@ export class ironboundActor extends Actor {
       newFormula = this.changeFormula(newFormula);
       critdie = true;
     }
+
+    newFormula = newFormula + "+" + this.system.damageBonus;
 
     let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
