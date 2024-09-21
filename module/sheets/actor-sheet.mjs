@@ -269,6 +269,7 @@ export class ironboundActorSheet extends ActorSheet {
     html.on("click", ".clickShortRest", this._handleShortRest.bind(this));
     html.on("click", ".clickLongRest", this._handleLongRest.bind(this));
     html.on("click", ".were", this._handleChange.bind(this));
+    html.on("onChange", ".weaknessChange", this._handleWeakness.bind(this));
     html.on(
       "click",
       ".refresh-actionPoints-btn",
@@ -624,6 +625,10 @@ export class ironboundActorSheet extends ActorSheet {
       "system.physical.current": current,
       "system.physical.base": base,
     });
+  }
+
+  async _handleWeakness(event){
+    console.log(event)
   }
 }
 

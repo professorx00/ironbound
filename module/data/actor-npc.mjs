@@ -9,8 +9,8 @@ export default class ironboundNPC extends ironboundActorBase {
 
     schema.cr = new fields.NumberField({ ...requiredInteger, initial: 1, min: 0 });
     schema.xp = new fields.NumberField({ ...requiredInteger, initial: 0, min: 0 });
-    schema.weakness = new fields.StringField({ blank: true });
-    schema.resistance = new fields.StringField({ blank: true });
+    schema.weakness = new fields.StringField({ initial: "Weakness" });
+    schema.resistance = new fields.StringField({ initial: "Resistance" });
     schema.health = new fields.SchemaField({
       current: new fields.NumberField({ ...requiredInteger, initial: 2 }),
       base: new fields.NumberField({ ...requiredInteger, initial: 2 }),
