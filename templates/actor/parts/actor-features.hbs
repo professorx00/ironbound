@@ -27,13 +27,13 @@
           </a>
         </div>
        <div class='item-image'>
-          <a class='rollable' data-roll-type='{{item.type}}' data-pool="{{item.system.pool}}" data-actor-id="{{../actor._id}}">
+          <a class='rollable' data-roll-type='{{item.type}}' data-pool="{{item.system.pool}}" data-ap="{{item.system.actionPoints}}" data-actor-id="{{../actor._id}}">
             <i class="fa-solid fa-dice-d12"></i>
           </a>
         </div>
         {{#if (isDamageItem item)}}
         <div class='item-image'>
-          <a class='roll-damage' data-pool="{{item.system.pool}}" data-formula="{{item.system.formula}}" data-weapon="">
+          <a class='roll-damage' data-pool="{{item.system.pool}}" data-formula="{{item.system.formula}}"  data-weapon="">
             <i class="fa-solid fa-heart-crack"></i>
           </a>
         </div>

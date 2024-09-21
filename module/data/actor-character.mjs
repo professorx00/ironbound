@@ -111,6 +111,8 @@ export default class ironboundCharacter extends ironboundActorBase {
       initial: 1,
     });
 
+    schema.were = new fields.BooleanField({ initial: false });
+
     return schema;
   }
 

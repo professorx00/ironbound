@@ -140,7 +140,6 @@ export class ironboundActorSheet extends ActorSheet {
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || Item.DEFAULT_ICON;
-      console.log(i.type);
       // Append to gear.
       if (i.system.fav) {
         favorites.push(i);
@@ -186,7 +185,6 @@ export class ironboundActorSheet extends ActorSheet {
       }
     }
 
-    console.log(fightingstances);
     // Assign and return
     context.gear = gear;
     context.activeFeats = activeFeats;
@@ -270,6 +268,7 @@ export class ironboundActorSheet extends ActorSheet {
     html.on("click", ".clickDoom", this._handleDoom.bind(this));
     html.on("click", ".clickShortRest", this._handleShortRest.bind(this));
     html.on("click", ".clickLongRest", this._handleLongRest.bind(this));
+    html.on("click", ".were", this._handleChange.bind(this));
     html.on(
       "click",
       ".refresh-actionPoints-btn",
@@ -329,26 +328,6 @@ export class ironboundActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
     this._getBoonDialog(dataset);
-    // Handle item rolls.
-    // if (dataset.rollType) {
-    //   if (dataset.rollType == "item") {
-    //     const itemId = element.closest(".item").dataset.itemId;
-    //     const item = this.actor.items.get(itemId);
-    //     if (item) return item.roll();
-    //   }
-    // }
-
-    // Handle rolls that supply the formula directly.
-    // if (dataset.roll) {
-    //   let label = dataset.label ? `[ability] ${dataset.label}` : "";
-    //   let roll = new Roll(dataset.roll, this.actor.getRollData());
-    //   roll.toMessage({
-    //     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    //     flavor: label,
-    //     rollMode: game.settings.get("core", "rollMode"),
-    //   });
-    //   return roll;
-    // }
   }
 
   _deleteClass(event) {
@@ -364,7 +343,6 @@ export class ironboundActorSheet extends ActorSheet {
     const dataset = el.dataset;
     const pool = dataset.pool;
     const heal = dataset.heal;
-    console.log(heal, pool);
     const dialog = new game.ironbound.ironboundHealDialog(
       this.actor,
       pool,
@@ -380,6 +358,7 @@ export class ironboundActorSheet extends ActorSheet {
     const pool = dataset.pool;
     const formula = dataset.formula;
     const weapon = dataset.weapon;
+    console.log(pool, formula, weapon);
     const dialog = new game.ironbound.ironboundDamageDialog(
       this.actor,
       pool,
@@ -399,10 +378,12 @@ export class ironboundActorSheet extends ActorSheet {
   }
 
   async _getBoonDialog(data) {
+    console.log("Data", data);
     const boonDialog = new game.ironbound.ironboundBoonDialog(
       this.actor,
       data.rollType,
-      data.pool
+      data.pool,
+      data.ap
     );
 
     boonDialog.render(true);
@@ -479,7 +460,14 @@ export class ironboundActorSheet extends ActorSheet {
     const poolPoint = parseInt(dataset.poolpoint);
     const pool = dataset.pool;
     const currentPool = this.actor.system[pool.toLowerCase()].current;
-    this.actor.update({ [`system.${pool}.current`]: currentPool + poolPoint });
+    let newpool = currentPool + poolPoint;
+    if (newpool > this.actor.system[pool.toLowerCase()].base) {
+      newpool = this.actor.system[pool.toLowerCase()].base;
+    }
+    if (newpool <= 0) {
+      newpool = 0;
+    }
+    this.actor.update({ [`system.${pool}.current`]: newpool });
   }
   _refreshPools(event) {
     const element = event.currentTarget;
@@ -556,7 +544,6 @@ export class ironboundActorSheet extends ActorSheet {
     const dataset = element.dataset;
     const formula = dataset.formula;
     const pool = dataset.pool;
-    console.log(formula, pool);
     this.actor.rollPower(formula, pool);
   }
 
@@ -578,7 +565,6 @@ export class ironboundActorSheet extends ActorSheet {
   }
 
   async _handleLongRest(event) {
-    console.log("Long Rest");
     let healthFormula = this.actor.system.healthDie;
     let poolFormula = "1d12";
     let healthRoll = await new Roll(healthFormula).evaluate();
@@ -588,7 +574,6 @@ export class ironboundActorSheet extends ActorSheet {
       this.actor.system.health.base
         ? this.actor.system.health.base
         : this.actor.system.health.current + healthRoll._total;
-    console.log(newHealth);
     this.actor.update({
       "system.markofdoom": 0,
       "system.currentBoons": 0,
@@ -596,4 +581,28 @@ export class ironboundActorSheet extends ActorSheet {
     });
     console.log("doom2", this.actor.system.markofdoom);
   }
+  async _handleChange(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    let were = dataset.were?.toLowerCase?.() === "true";
+    let current = this.actor.system.physical.current;
+    let base = this.actor.system.physical.base;
+    if (!were) {
+      current = current + 2;
+      base = base + 2;
+    } else {
+      if (current - 2 > 0) {
+        current = current - 2;
+      } else {
+        current = 0;
+      }
+      base = base - 2;
+    }
+    this.actor.update({
+      "system.were": !were,
+      "system.physical.current": current,
+      "system.physical.base": base,
+    });
+  }
 }
+

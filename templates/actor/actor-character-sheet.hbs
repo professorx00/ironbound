@@ -50,7 +50,21 @@
     <div class="header-fields actor">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <div class="classRow"><h1 class="charClass"><input name="class" type="text" value="{{characterClass.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{characterClass._id}}"><i class="fa-solid fa-trash"></i></a></div>
-      <div class="classRow"><h1 class="species"><input name="species" type="text" value="{{species.name}}" placeholder="Species"/></h1><a class="deleteClass" data-class-id="{{species._id}}"><i class="fa-solid fa-trash"></i></a></div>
+      <div class="classRow">
+          <h1 class="species"><input name="species" type="text" value="{{species.name}}" placeholder="Species"/></h1>
+          <a class="deleteClass" data-class-id="{{species._id}}">
+              <i class="fa-solid fa-trash"></i>
+          </a>
+          {{#if (isWere species.name)}}
+          <a class="were" data-were="{{system.were}}">
+            {{#if system.were}}
+            <i class="fa-duotone fa-solid fa-teddy-bear"></i>
+            {{else}}
+            <i class="fa-duotone fa-solid fa-transporter-1"></i>
+            {{/if}}
+          </a>
+          {{/if}}
+        </div>
       <div class="stat-row">
         <div class="stat-item">
           <label>Level</label>

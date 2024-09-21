@@ -25,6 +25,7 @@ Hooks.once("init", function () {
     ironboundDamageDialog,
     ironboundHealDialog,
     ironboundHealDieDialog,
+    ironboundErrorDialog,
     rollItemMacro,
   };
 
@@ -149,6 +150,18 @@ Handlebars.registerHelper("is3MarkofDoom", function (actorId) {
   let actor = game.actors.get(actorId);
   if (actor.system.markofdoom >= 3) {
     return true;
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper("isWere", function (name) {
+  if (name) {
+    if (name.toLowerCase().includes("were")) {
+      return true;
+    } else {
+      false;
+    }
   } else {
     return false;
   }
@@ -312,6 +325,7 @@ function rollDmg(ev) {
   const el = ev.currentTarget;
   const data = el.dataset;
   const { actorId, formula, pool, crit, powerdie, weapon } = data;
+  console.log(actorId, formula, pool, crit, powerdie, weapon);
   let actor = game.actors.get(actorId);
   actor.rollDamage(pool, formula, crit, powerdie, weapon);
 }
@@ -337,12 +351,45 @@ function addToHealth(ev) {
   });
 }
 
+class ironboundErrorDialog extends Application {
+  constructor(actor, error) {
+    super();
+    this.actor = actor;
+    this.error = error;
+  }
+
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["form"],
+      height: 200,
+      width: 400,
+      popOut: true,
+      template: `systems/ironbound/templates/dialogs/errorDialog.hbs`,
+      id: "error-dialog",
+      title: "Error",
+    });
+  }
+
+  getData() {
+    // Send data to the template
+    return {
+      actor: this.actor,
+      error: this.error,
+    };
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+  }
+}
+
 class ironboundBoonDialog extends Application {
-  constructor(actor, type, pool) {
+  constructor(actor, type, pool, actionPoints) {
     super();
     this.actor = actor;
     this.pool = pool;
     this.rollType = type;
+    this.ap = actionPoints;
   }
 
   static get defaultOptions() {
@@ -363,6 +410,7 @@ class ironboundBoonDialog extends Application {
       actor: this.actor,
       pool: this.pool,
       rollType: this.rollType,
+      ap: this.ap,
     };
   }
 
@@ -387,7 +435,7 @@ class ironboundBoonDialog extends Application {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
-    this.actor.roll(dataset.type, dataset.pool);
+    this.actor.roll(dataset.type, dataset.pool, dataset.ap);
     this.close();
   }
 

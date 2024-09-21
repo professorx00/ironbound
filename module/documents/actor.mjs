@@ -50,43 +50,56 @@ export class ironboundActor extends Actor {
     super.activateListeners(html);
   }
 
-  async roll(type, pool) {
-    const boons = this.system.currentBoons;
-    const numberOfDice = Math.abs(boons) + 1;
-    let criticalSuccess = false;
-    let criticalFailure = false;
-    let keepDice = "d12kh";
-    if (boons < 0) {
-      keepDice = "d12kl";
+  async roll(type, pool, ap) {
+    console.log(ap);
+    if (parseInt(ap) <= this.system.actionPoints) {
+      let apLeft = this.system.actionPoints - parseInt(ap);
+      const boons = this.system.currentBoons;
+      const numberOfDice = Math.abs(boons) + 1;
+      let criticalSuccess = false;
+      let criticalFailure = false;
+      let keepDice = "d12kh";
+      if (boons < 0) {
+        keepDice = "d12kl";
+      }
+      if (boons == 0) {
+        keepDice = "d12";
+      }
+      const formula = numberOfDice + keepDice;
+      const destinyDice = this.system.destinyDie;
+      let roll = await new Roll(formula).evaluate();
+      if (roll._total == 12) {
+        criticalSuccess = true;
+      }
+      if (roll._total == 1) {
+        criticalFailure = true;
+      }
+      let rollResults = "";
+      const rollData = {
+        rollHTML: await roll.render(),
+        rollResults: rollResults,
+        roll: roll._total,
+        roll_type: type,
+        actor: this._id,
+        pool: pool,
+        criticalSuccess,
+        criticalFailure,
+        destinyDice: destinyDice,
+        formula: formula,
+      };
+      this.sendRolltoChat(rollData, roll, "regularRoll.hbs");
+      if (apLeft >= 0) {
+        this.update({ "system.actionPoints": apLeft });
+      } else {
+        this.update({ "system.actionPoints": 0 });
+      }
+    } else {
+      let errorDialog = new game.ironbound.ironboundErrorDialog(
+        this,
+        "You do not have enough Action Points to use this"
+      );
+      errorDialog.render(true);
     }
-    if (boons == 0) {
-      keepDice = "d12";
-    }
-    const formula = numberOfDice + keepDice;
-    const destinyDice = this.system.destinyDie;
-    let roll = await new Roll(formula).evaluate();
-    if (roll._total == 12) {
-      criticalSuccess = true;
-    }
-    if (roll._total == 1) {
-      criticalFailure = true;
-    }
-    let rollResults = "";
-    const rollData = {
-      rollHTML: await roll.render(),
-      rollResults: rollResults,
-      roll: roll._total,
-      roll_type: type,
-      actor: this._id,
-      pool: pool,
-      criticalSuccess,
-      criticalFailure,
-      destinyDice: destinyDice,
-      formula: formula,
-    };
-
-    this.sendRolltoChat(rollData, roll, "regularRoll.hbs");
-
     this.update({ "system.currentBoons": 0 });
   }
 
@@ -139,7 +152,7 @@ export class ironboundActor extends Actor {
       newFormula = this.changeFormula(newFormula);
       critdie = true;
     }
-    newFormula = newFormula +"+"+ this.system.damageBonus;
+    newFormula = newFormula + "+" + this.system.damageBonus;
     let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
@@ -184,7 +197,6 @@ export class ironboundActor extends Actor {
     }
 
     newFormula = newFormula + "+" + this.system.damageBonus;
-
     let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
@@ -229,33 +241,41 @@ export class ironboundActor extends Actor {
   }
 
   async rollDestiny(formula, pool) {
-    await this.update({ "system.destinyDie": this.system.destinyDie - 1 });
-    let roll = await new Roll(formula).evaluate();
-    let criticalSuccess = false;
-    let criticalFailure = false;
-    const destinyDice = this.system.destinyDie;
-    let type = "Destiny";
-    if (roll._total == 12) {
-      criticalSuccess = true;
+    let current = this.system.destinyDie;
+    if (current - 1 < 0) {
+      current = 0;
+    } else {
+      current = current - 1;
     }
-    if (roll._total == 1) {
-      criticalFailure = true;
-    }
-    let rollResults = "";
-    const rollData = {
-      rollHTML: await roll.render(),
-      rollResults: rollResults,
-      roll: roll._total,
-      roll_type: type,
-      actor: this._id,
-      pool: pool,
-      criticalSuccess,
-      criticalFailure,
-      destinyDice: destinyDice,
-      formula: formula,
-    };
+    if (current >= 0) {
+      await this.update({ "system.destinyDie": current });
+      let roll = await new Roll(formula).evaluate();
+      let criticalSuccess = false;
+      let criticalFailure = false;
+      const destinyDice = this.system.destinyDie;
+      let type = "Destiny";
+      if (roll._total == 12) {
+        criticalSuccess = true;
+      }
+      if (roll._total == 1) {
+        criticalFailure = true;
+      }
+      let rollResults = "";
+      const rollData = {
+        rollHTML: await roll.render(),
+        rollResults: rollResults,
+        roll: roll._total,
+        roll_type: type,
+        actor: this._id,
+        pool: pool,
+        criticalSuccess,
+        criticalFailure,
+        destinyDice: destinyDice,
+        formula: formula,
+      };
 
-    this.sendRolltoChat(rollData, roll, "regularRoll.hbs");
+      this.sendRolltoChat(rollData, roll, "regularRoll.hbs");
+    }
   }
 
   async rollHealth(formula, pool) {
