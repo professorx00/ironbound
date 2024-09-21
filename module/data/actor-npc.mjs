@@ -27,12 +27,10 @@ export default class ironboundNPC extends ironboundActorBase {
     });
     
     schema.damageBonus = new fields.NumberField({
-      ...requiredInteger,
       initial: 2,
     });
 
     schema.damageReduction = new fields.NumberField({
-      ...requiredInteger,
       initial: 2,
     });
 
