@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc"]
+    "types": ["character", "npc", "vehicle"]
   },
   "Item": {
     "types": [
@@ -22,7 +22,8 @@
       "species",
       "scrolls",
       "npcability",
-      "npcattack"
+      "npcattack",
+      "vehicleEnhancements"
     ]
   }
 }

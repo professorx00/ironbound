@@ -916,6 +916,10 @@
   flex: 0.45;
 }
 
+.headerSpacer{
+  flex: 0.15;
+}
+
 .stat-item{
   display: flex;
   flex-direction: column;
@@ -1055,4 +1059,13 @@
 
 .poolCurrent{
   margin:0;
+}
+
+.critFail{
+  border: none;
+  color: Red;
+}
+.critSuccess{
+  border: none;
+  color: green;
 }

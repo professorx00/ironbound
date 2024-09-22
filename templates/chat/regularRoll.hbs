@@ -1,6 +1,12 @@
 <div class="chat_roll">
     <div>{{roll_type}} Roll</div>
     {{{rollHTML}}}
+    {{#if (isCriticalFailure roll)}}
+        <h2 class="critFail">Critical Failure</h2>
+    {{/if}}
+    {{#if (isCriticalSuccess roll)}}
+        <h2 class="critSuccess">Critical Success</h2>
+    {{/if}}
     {{#if (isCharacter actor)}}
         {{#if (rollNotCritical roll)}}
             <div class="chat-pools">

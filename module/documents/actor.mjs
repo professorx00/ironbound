@@ -51,8 +51,8 @@ export class ironboundActor extends Actor {
   }
 
   async roll(type, pool, ap) {
-    console.log(ap);
-    if (parseInt(ap) <= this.system.actionPoints) {
+    
+    if (parseInt(ap) <= this.system.actionPoints || this.type == "vehicle") {
       let apLeft = this.system.actionPoints - parseInt(ap);
       const boons = this.system.currentBoons;
       const numberOfDice = Math.abs(boons) + 1;
@@ -184,6 +184,9 @@ export class ironboundActor extends Actor {
   }
 
   async rollDamage(pool, formula, crit, powerdie, weapon) {
+    if(!weapon){
+      weapon = ""
+    }
     let newFormula = formula;
     let pdie = false;
     let critdie = false;
@@ -195,8 +198,9 @@ export class ironboundActor extends Actor {
       newFormula = this.changeFormula(newFormula);
       critdie = true;
     }
-
-    newFormula = newFormula + "+" + this.system.damageBonus;
+    if (this.type != "vehicle") {
+      newFormula = newFormula + "+" + this.system.damageBonus;
+    }
     let roll = await new Roll(newFormula, this.getRollData()).evaluate();
     let rollResults = "";
     const rollData = {
@@ -212,6 +216,7 @@ export class ironboundActor extends Actor {
       weapon: weapon,
     };
 
+    console.log("roll data", rollData);
     let cardContent = await renderTemplate(
       "systems/ironbound/templates/chat/damageRoll.hbs",
       rollData

@@ -7,8 +7,16 @@ export default class ironboundNPC extends ironboundActorBase {
     const requiredInteger = { required: true, nullable: false, integer: true };
     const schema = super.defineSchema();
 
-    schema.cr = new fields.NumberField({ ...requiredInteger, initial: 1, min: 0 });
-    schema.xp = new fields.NumberField({ ...requiredInteger, initial: 0, min: 0 });
+    schema.cr = new fields.NumberField({
+      ...requiredInteger,
+      initial: 1,
+      min: 0,
+    });
+    schema.xp = new fields.NumberField({
+      ...requiredInteger,
+      initial: 0,
+      min: 0,
+    });
     schema.weakness = new fields.StringField({ initial: "Weakness" });
     schema.resistance = new fields.StringField({ initial: "Resistance" });
     schema.health = new fields.SchemaField({
@@ -25,7 +33,7 @@ export default class ironboundNPC extends ironboundActorBase {
       ...requiredInteger,
       initial: 3,
     });
-    
+
     schema.damageBonus = new fields.NumberField({
       initial: 2,
     });
@@ -47,20 +55,13 @@ export default class ironboundNPC extends ironboundActorBase {
       "1D12+6": new fields.StringField({ initial: "1D12+6" }),
     });
 
-    schema.tn = new fields.NumberField({
-      ...requiredInteger,
-      initial: 9,
-      min: 0,
-    });
-
     schema.movement = new fields.NumberField({
       ...requiredInteger,
       initial: 3,
       min: 0,
     });
 
-    
-    return schema
+    return schema;
   }
 
   prepareDerivedData() {

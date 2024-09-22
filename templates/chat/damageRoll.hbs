@@ -2,6 +2,8 @@
 <div class="critHolder">
     <h1>{{roll}} {{pool}} {{weapon}} Damage!</h1>
 </div>
+{{#if (isCharacter actor)}}
 <div>
     <a class="destinyDie-btn" data-formula="{{formula}}" data-actor-id="{{actor}}" data-pool="{{pool}}" data-type="dmgRoll">Roll Destiny Die</a>
 </div>
+{{/if}}

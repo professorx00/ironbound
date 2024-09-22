@@ -51,6 +51,7 @@ Hooks.once("init", function () {
   CONFIG.Actor.dataModels = {
     character: models.ironboundCharacter,
     npc: models.ironboundNPC,
+    vehicle: models.ironboundVehicle,
   };
   CONFIG.Item.documentClass = ironboundItem;
   CONFIG.Item.dataModels = {
@@ -73,6 +74,7 @@ Hooks.once("init", function () {
     gear: models.ironboundGear,
     npcattack: models.ironboundNPCAttack,
     npcability: models.ironboundNPCAbility,
+    vehicleEnhancements: models.ironboundVehicleEnhancements,
   };
 
   // Active Effects are never copied to the Actor,
@@ -182,6 +184,19 @@ Handlebars.registerHelper("rollNotCritical", function (roll) {
     return true;
   }
 });
+Handlebars.registerHelper("isCriticalFailure", function (roll) {
+  if (parseInt(roll) === 1) {
+    return true;
+  }
+  return false;
+});
+
+Handlebars.registerHelper("isCriticalSuccess", function (roll) {
+  if (parseInt(roll) === 12) {
+    return true;
+  }
+  return false;
+});
 
 Handlebars.registerHelper("hasDestinyDie", function (dice) {
   if (dice > 0) {
@@ -197,7 +212,7 @@ Handlebars.registerHelper("isGM", function (user) {
 
 Handlebars.registerHelper("isCharacter", function (actorId) {
   let actor = game.actors.get(actorId);
-  if (actor.type == "npc") {
+  if (actor.type == "npc" || actor.type == "vehicle") {
     return false;
   } else {
     return true;
@@ -224,7 +239,6 @@ Hooks.once("ready", function () {
 });
 
 Hooks.on("renderChatMessage", function (message, html, messageData) {
-  console.log("Chat rendered");
   html.find(".destinyDie-btn").click((ev) => {
     const el = ev.currentTarget;
     const dataset = el.dataset;
@@ -325,9 +339,11 @@ function addPoolPoints(actor_id, pool, roll) {
 function rollDmg(ev) {
   const el = ev.currentTarget;
   const data = el.dataset;
-  const { actorId, formula, pool, crit, powerdie, weapon } = data;
-  console.log(actorId, formula, pool, crit, powerdie, weapon);
+  let { actorId, formula, pool, crit, powerdie, weapon } = data;
   let actor = game.actors.get(actorId);
+  if (pool.toLowerCase() == "none") {
+    pool = "physical";
+  }
   actor.rollDamage(pool, formula, crit, powerdie, weapon);
 }
 
@@ -462,8 +478,6 @@ class ironboundPoolAllocationDialog extends Application {
     html.find(".handleAllocation").click((ev) => this.handleAllocation(ev));
   }
 }
-
-
 
 class ironboundErrorDialog extends Application {
   constructor(actor, error) {
@@ -638,7 +652,6 @@ class ironboundAddPoolDialog extends Application {
     const newRoll = parseInt(dataset.roll) + boost;
     const poolString = `system.${pool.toLowerCase()}.current`;
     const current = this.actor.system[pool.toLowerCase()].current - boost;
-    console.log(poolString);
     this.actor.update({ [poolString]: current });
     this.actor.addPoolChat(pool, boost, newRoll);
     this.actor.update({ "system.rollBoost": 0 });

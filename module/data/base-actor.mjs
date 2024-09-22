@@ -19,6 +19,11 @@ export default class ironboundActorBase extends ironboundDataModel {
     schema.biography = new fields.StringField({ required: true, blank: true }); // equivalent to passing ({initial: ""}) for StringFields
     schema.gmnotes = new fields.StringField({ required: true, blank: true }); // equivalent to passing ({initial: ""}) for StringFields
 
+    schema.toHit = new fields.NumberField({
+      ...requiredInteger,
+      initial: 9,
+    });
+
     return schema;
   }
 

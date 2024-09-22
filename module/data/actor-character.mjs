@@ -9,15 +9,15 @@ export default class ironboundCharacter extends ironboundActorBase {
 
     schema.attributes = new fields.SchemaField({
       level: new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 1 })
+        value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       }),
     });
 
     schema.arcane = new fields.SchemaField({
-      current: new fields.NumberField({...requiredInteger, initial: 2}),
-      base: new fields.NumberField({...requiredInteger, initial: 2}),
-      def: new fields.NumberField({initial: 0}),
-    })
+      current: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+      base: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+      def: new fields.NumberField({ initial: 0 }),
+    });
 
     schema.physical = new fields.SchemaField({
       current: new fields.NumberField({ ...requiredInteger, initial: 2 }),
@@ -28,13 +28,13 @@ export default class ironboundCharacter extends ironboundActorBase {
     schema.mental = new fields.SchemaField({
       current: new fields.NumberField({ ...requiredInteger, initial: 2 }),
       base: new fields.NumberField({ ...requiredInteger, initial: 2 }),
-      def: new fields.NumberField({  initial: 0 }),
+      def: new fields.NumberField({ initial: 0 }),
     });
 
     schema.health = new fields.SchemaField({
       current: new fields.NumberField({ ...requiredInteger, initial: 2 }),
-      base: new fields.NumberField({ ...requiredInteger, initial: 2 })
-    });    
+      base: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+    });
 
     schema.actionPoints = new fields.NumberField({
       ...requiredInteger,
@@ -46,16 +46,16 @@ export default class ironboundCharacter extends ironboundActorBase {
       initial: 0,
     });
 
-    schema.powerDice =  new fields.SchemaField({
-      "1D4": new fields.StringField({initial: "1D4"}),
-      "1D6": new fields.StringField({initial: "1D6"}),
-      "1D6+3": new fields.StringField({initial: "1D6+3"}),
-      "1D8": new fields.StringField({initial: "1D8"}),
-      "1D10": new fields.StringField({initial: "1D10"}),
-      "1D12": new fields.StringField({initial: "1D12"}),
-      "1D12+3": new fields.StringField({initial: "1D12+3"}),
-      "1D12+6": new fields.StringField({initial: "1D12+6"}),
-    })
+    schema.powerDice = new fields.SchemaField({
+      "1D4": new fields.StringField({ initial: "1D4" }),
+      "1D6": new fields.StringField({ initial: "1D6" }),
+      "1D6+3": new fields.StringField({ initial: "1D6+3" }),
+      "1D8": new fields.StringField({ initial: "1D8" }),
+      "1D10": new fields.StringField({ initial: "1D10" }),
+      "1D12": new fields.StringField({ initial: "1D12" }),
+      "1D12+3": new fields.StringField({ initial: "1D12+3" }),
+      "1D12+6": new fields.StringField({ initial: "1D12+6" }),
+    });
 
     schema.healthDice = new fields.SchemaField({
       "1D4": new fields.StringField({ initial: "1D4" }),
@@ -70,7 +70,7 @@ export default class ironboundCharacter extends ironboundActorBase {
 
     schema.healthDie = new fields.StringField({ initial: "1D4" });
 
-    schema.powerDie = new fields.StringField({initial: "1D4"})
+    schema.powerDie = new fields.StringField({ initial: "1D4" });
 
     schema.damageBonus = new fields.NumberField({
       ...requiredInteger,
@@ -102,10 +102,6 @@ export default class ironboundCharacter extends ironboundActorBase {
       initial: 3,
     });
 
-    schema.toHit = new fields.NumberField({
-      ...requiredInteger,
-      initial: 9,
-    });
     schema.level = new fields.NumberField({
       ...requiredInteger,
       initial: 1,

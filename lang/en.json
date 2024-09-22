@@ -1,13 +1,5 @@
 {
   "IRONBOUND": {
-    "Ability": {
-      "Str": { "long": "Strength", "abbr": "str" },
-      "Con": { "long": "Constitution", "abbr": "con" },
-      "Dex": { "long": "Dexterity", "abbr": "dex" },
-      "Int": { "long": "Intelligence", "abbr": "int" },
-      "Wis": { "long": "Wisdom", "abbr": "wis" },
-      "Cha": { "long": "Charisma", "abbr": "cha" }
-    },
     "SheetLabels": {
       "Actor": "ironbound Actor Sheet",
       "Item": "ironbound Item Sheet"
@@ -18,13 +10,21 @@
       "Temporary": "Temporary Effects",
       "Passive": "Passive Effects",
       "Inactive": "Inactive Effects"
+    },
+    "Sheets": {
+      "Enhancements": "Enhancements",
+      "vehiclePoints": "Vehicle Points",
+      "damage": "Damage",
+      "heal": "Heal",
+      "equipped": "Equipped"
     }
   },
 
   "TYPES": {
     "Actor": {
       "character": "Character",
-      "npc": "NPC"
+      "npc": "NPC",
+      "vehicle": "Vehicle"
     },
     "Item": {
       "gear": "Gear",
@@ -45,7 +45,8 @@
       "wands": "Wand",
       "weapons": "Weapon",
       "npcattack": "NPC Attack",
-      "npcability": "NPC Ability"
+      "npcability": "NPC Ability",
+      "vehicleEnhancements": "Vehicle Enhancement"
     }
   }
 }

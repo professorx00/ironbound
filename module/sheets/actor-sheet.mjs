@@ -60,6 +60,11 @@ export class ironboundActorSheet extends ActorSheet {
       this._prepareItems(context);
     }
 
+    // Prepare NPC data and items.
+    if (actorData.type == "vehicle") {
+      this._prepareItems(context);
+    }
+
     // Enrich biography info for display
     // Enrichment turns text like `[[/r 1d20]]` into buttons
     context.enrichedBiography = await TextEditor.enrichHTML(
@@ -136,6 +141,7 @@ export class ironboundActorSheet extends ActorSheet {
     const favorites = [];
     const npcattack = [];
     const npcability = [];
+    const vehicleEnhancements = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -182,6 +188,8 @@ export class ironboundActorSheet extends ActorSheet {
         npcattack.push(i);
       } else if (i.type === "npcability") {
         npcability.push(i);
+      } else if (i.type === "vehicleEnhancements") {
+        vehicleEnhancements.push(i);
       }
     }
 
@@ -205,6 +213,7 @@ export class ironboundActorSheet extends ActorSheet {
     context.favorites = favorites;
     context.npcattack = npcattack;
     context.npcability = npcability;
+    context.vehicleEnhancements = vehicleEnhancements;
   }
 
   /* -------------------------------------------- */
@@ -269,7 +278,7 @@ export class ironboundActorSheet extends ActorSheet {
     html.on("click", ".clickShortRest", this._handleShortRest.bind(this));
     html.on("click", ".clickLongRest", this._handleLongRest.bind(this));
     html.on("click", ".were", this._handleChange.bind(this));
-    html.on("onChange", ".weaknessChange", this._handleWeakness.bind(this));
+    html.on("click", "equipVE", this._handleEquipVE.bind(this));
     html.on(
       "click",
       ".refresh-actionPoints-btn",
@@ -359,7 +368,6 @@ export class ironboundActorSheet extends ActorSheet {
     const pool = dataset.pool;
     const formula = dataset.formula;
     const weapon = dataset.weapon;
-    console.log(pool, formula, weapon);
     const dialog = new game.ironbound.ironboundDamageDialog(
       this.actor,
       pool,
@@ -379,7 +387,6 @@ export class ironboundActorSheet extends ActorSheet {
   }
 
   async _getBoonDialog(data) {
-    console.log("Data", data);
     const boonDialog = new game.ironbound.ironboundBoonDialog(
       this.actor,
       data.rollType,
@@ -411,46 +418,60 @@ export class ironboundActorSheet extends ActorSheet {
     const item = this.actor.items.get(item_id);
     item.update({ "system.equipped": !item.system.equipped });
     if (!item.system.equipped) {
-      if (item.type === "defenseitems") {
-        if (item.system.pool === "Physical") {
+      if (item.type == "defenseitems") {
+        if (item.system.pool.toLowerCase() === "physical") {
           this.actor.update({
             "system.physical.def":
               this.actor.system.physical.def + item.system.bonus,
           });
         }
-        if (item.system.pool === "Arcane") {
+        if (item.system.pool.toLowerCase() === "arcane") {
           this.actor.update({
             "system.arcane.def":
               this.actor.system.arcane.def + item.system.bonus,
           });
         }
-        if (item.system.pool === "Mental") {
+        if (item.system.pool.toLowerCase() === "mental") {
           this.actor.update({
             "system.mental.def":
               this.actor.system.mental.def + item.system.bonus,
           });
         }
       }
+      if (item.type == "vehicleEnhancements") {
+        let vehiclePoints = this.actor.system.vehiclePoints;
+        let newPoints = vehiclePoints - item.system.vehiclePoints;
+        if (vehiclePoints >= 0 && newPoints >= 0) {
+          this.actor.update({ "system.vehiclePoints": newPoints });
+        } else {
+          console.log("You Don't Have enough Points");
+        }
+      }
     } else {
-      if (item.type === "defenseitems") {
-        if (item.system.pool === "Physical") {
+      if (item.type == "defenseitems") {
+        if (item.system.pool.toLowerCase() === "physical") {
           this.actor.update({
             "system.physical.def":
               this.actor.system.physical.def - item.system.bonus,
           });
         }
-        if (item.system.pool === "Arcane") {
+        if (item.system.pool.toLowerCase() === "arcane") {
           this.actor.update({
             "system.arcane.def":
               this.actor.system.arcane.def - item.system.bonus,
           });
         }
-        if (item.system.pool === "Mental") {
+        if (item.system.pool.toLowerCase() === "mental") {
           this.actor.update({
             "system.mental.def":
               this.actor.system.mental.def - item.system.bonus,
           });
         }
+      }
+      if (item.type == "vehicleEnhancements") {
+        let vehiclePoints = this.actor.system.vehiclePoints;
+        let newPoints = vehiclePoints + item.system.vehiclePoints;
+        this.actor.update({ "system.vehiclePoints": newPoints });
       }
     }
   }
@@ -570,7 +591,6 @@ export class ironboundActorSheet extends ActorSheet {
     }
     await this.actor.poolRestRoll("1d12");
     let marksofdoom = this.actor.system.markofdoom;
-    console.log("Marks of Doom", marksofdoom);
     if (marksofdoom > 0) {
       marksofdoom = marksofdoom - 1;
       if (marksofdoom < 0) {
@@ -601,7 +621,6 @@ export class ironboundActorSheet extends ActorSheet {
       "system.mental.current": this.actor.system.mental.base,
       "system.arcane.current": this.actor.system.arcane.base,
     });
-    console.log("doom2", this.actor.system.markofdoom);
   }
   async _handleChange(event) {
     const element = event.currentTarget;
@@ -627,8 +646,12 @@ export class ironboundActorSheet extends ActorSheet {
     });
   }
 
-  async _handleWeakness(event){
-    console.log(event)
+  async _handleWeakness(event) {
+    console.log(event);
+  }
+
+  async _handleEquipVE(event) {
+    console.log(event);
   }
 }
 
