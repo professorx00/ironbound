@@ -51,7 +51,7 @@
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <div class="classRow"><h1 class="charClass"><input name="class" type="text" value="{{characterClass.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{characterClass._id}}"><i class="fa-solid fa-trash"></i></a></div>
       <div class="classRow">
-          <h1 class="species"><input name="species" type="text" value="{{species.name}}" placeholder="Species"/></h1>
+          <h1 class="charClass"><input name="species" type="text" value="{{species.name}}" placeholder="Species"/></h1>
           <a class="deleteClass" data-class-id="{{species._id}}">
               <i class="fa-solid fa-trash"></i>
           </a>
@@ -138,7 +138,7 @@
   <section class="pool-section">
     <div class="pools">
       <div class="arcane-holder">
-          <label for="system.arcane.current" class="pool-point-label-arcane "><a class="rollPool" data-roll-type='pool' data-pool="Arcane" data-actor-id="{{actor._id}}"><h3>Arcane</h3></a></label>
+          <label for="system.arcane.current" class="pool-point-label-arcane "><a class="rollPool" data-roll-type='pool' data-pool="Arcane" data-actor-id="{{actor._id}}" data-ap="2"><h3>Arcane</h3></a></label>
           <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="arcane"><i class="fa-solid fa-plus"></i></a>
             <input class="actorInput" type="number" name="system.arcane.current" value="{{system.arcane.current}}" data-dtype="Number"/>
@@ -153,7 +153,7 @@
            </div> 
         </div>
       <div class="physical-holder">
-          <label for="system.physical.current" class="pool-point-label-physical "><a class="rollPool" data-roll-type='pool' data-pool="Physical" data-actor-id="{{actor._id}}"><h3>Physical</h3></a></label>
+          <label for="system.physical.current" class="pool-point-label-physical "><a class="rollPool" data-roll-type='pool' data-pool="Physical" data-actor-id="{{actor._id}}" data-ap="2"><h3>Physical</h3></a></label>
           <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="physical"><i class="fa-solid fa-plus"></i></a>
             <input class="actorInput" type="number" name="system.physical.current" value="{{system.physical.current}}" data-dtype="Number"/>
@@ -168,7 +168,7 @@
            </div> 
         </div>
       <div class="mental-holder">
-          <label for="system.mental.current" class="pool-point-label-mental "><a class="rollPool" data-roll-type='pool' data-pool="Mental" data-actor-id="{{actor._id}}"><h3>Mental</h3></a></label>
+          <label for="system.mental.current" class="pool-point-label-mental "><a class="rollPool" data-roll-type='pool' data-pool="Mental" data-actor-id="{{actor._id}}" data-ap="2"><h3>Mental</h3></a></label>
           <div class="ironbound-row">
             <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="mental"><i class="fa-solid fa-plus"></i></a>
             <input class="actorInput" type="number" name="system.mental.current" value="{{system.mental.current}}" data-dtype="Number"/>

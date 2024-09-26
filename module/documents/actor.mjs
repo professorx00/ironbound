@@ -242,6 +242,7 @@ export class ironboundActor extends Actor {
       content: cardContent,
       speaker: ChatMessage.getSpeaker({ actor: this }),
     };
+    await game.dice3d.showForRoll(roll, game.user, true);
     ChatMessage.create(chatOptions);
   }
 
