@@ -26,5 +26,6 @@ export { default as ironboundGear } from "./item-gear.mjs";
 export { default as ironboundNPCAttack } from "./item-npcattack.mjs";
 export { default as ironboundNPCAbility } from "./item-npcability.mjs";
 export { default as ironboundVehicleEnhancements } from "./item-vehicleEnhancements.mjs";
+export { default as ironboundClassAbilities } from "./item-classAbilites.mjs";
 
 

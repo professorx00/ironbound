@@ -23,7 +23,8 @@
       "scrolls",
       "npcability",
       "npcattack",
-      "vehicleEnhancements"
+      "vehicleEnhancements",
+      "classAbilities"
     ]
   }
 }

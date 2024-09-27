@@ -75,6 +75,7 @@ Hooks.once("init", function () {
     npcattack: models.ironboundNPCAttack,
     npcability: models.ironboundNPCAbility,
     vehicleEnhancements: models.ironboundVehicleEnhancements,
+    classAbilities: models.ironboundClassAbilities,
   };
 
   // Active Effects are never copied to the Actor,
@@ -570,7 +571,6 @@ class ironboundBoonDialog extends Application {
   async _chatUpdate(event) {
     const element = event.currentTarget;
     const dataset = element.dataset;
-    console.log("check ");
   }
 
   // /** @override */

@@ -13,7 +13,7 @@ export default class ironboundItemBase extends ironboundDataModel {
       Physical: new fields.StringField({ initial: "Physical" }),
       Mental: new fields.StringField({ initial: "Mental" }),
     });
-    schema.pool = new fields.StringField({ initial: "None" });
+    schema.pool = new fields.StringField({ initial: "Physical" });
     schema.qty = new fields.NumberField({
       required: true,
       integer: true,

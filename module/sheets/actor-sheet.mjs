@@ -142,7 +142,7 @@ export class ironboundActorSheet extends ActorSheet {
     const npcattack = [];
     const npcability = [];
     const vehicleEnhancements = [];
-
+    const classAbilities = [];
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || Item.DEFAULT_ICON;
@@ -190,6 +190,8 @@ export class ironboundActorSheet extends ActorSheet {
         npcability.push(i);
       } else if (i.type === "vehicleEnhancements") {
         vehicleEnhancements.push(i);
+      } else if (i.type === "classAbilities") {
+        classAbilities.push(i);
       }
     }
 
@@ -214,6 +216,7 @@ export class ironboundActorSheet extends ActorSheet {
     context.npcattack = npcattack;
     context.npcability = npcability;
     context.vehicleEnhancements = vehicleEnhancements;
+    context.classAbilities = classAbilities;
   }
 
   /* -------------------------------------------- */

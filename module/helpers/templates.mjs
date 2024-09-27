@@ -16,6 +16,7 @@ export const preloadHandlebarsTemplates = async function () {
     "systems/ironbound/templates/actor/parts/actor-magicalSocieties.hbs",
     "systems/ironbound/templates/actor/parts/actor-fightingstances.hbs",
     "systems/ironbound/templates/actor/parts/actor-vehicleEnhancements.hbs",
+    "systems/ironbound/templates/actor/parts/actor-classAbilities.hbs",
     // Item partials
     "systems/ironbound/templates/item/parts/item-effects.hbs",
   ]);
