@@ -20,7 +20,7 @@
       "thumbnail": "systems/ironbound/assets/anvil-impact.png"
     }
   ],
-  "version": "2.0.17",
+  "version": "2.0.18",
   "compatibility": {
     "minimum": 11,
     "verified": "12"
@@ -37,8 +37,8 @@
   "packs": [],
   "packFolders": [],
   "socket": false,
-  "manifest": "https://github.com/professorx00/ironbound/releases/download/2.0.17/system.json",
-  "download": "https://github.com/professorx00/ironbound/releases/download/2.0.17/ironbound.zip",
+  "manifest": "https://github.com/professorx00/ironbound/releases/download/2.0.18/system.json",
+  "download": "https://github.com/professorx00/ironbound/releases/download/2.0.18/ironbound.zip",
   "background": "systems/ironbound/assets/anvil-impact.png",
   "gridDistance": 5,
   "gridUnits": "ft",
