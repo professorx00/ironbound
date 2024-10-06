@@ -518,7 +518,8 @@ class ironboundBoonDialog extends Application {
     this.actor = actor;
     this.pool = pool;
     this.rollType = type;
-    this.ap = actionPoints;
+    console.log(actionPoints);
+    this.ap = 0; /// Set this to zero so it wont deduct any action points till I am read to enable it
   }
 
   static get defaultOptions() {
