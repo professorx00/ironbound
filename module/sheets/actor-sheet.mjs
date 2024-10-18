@@ -268,6 +268,8 @@ export class ironboundActorSheet extends ActorSheet {
     html.on("click", ".bookmark", this._bookmark.bind(this));
 
     html.on("click", ".equipItem", this._equipItem.bind(this));
+    html.on("click", ".changeOty", this._changeQty.bind(this));
+    html.on("click", ".change-money-btn", this._changeMoney.bind(this));
 
     html.on("click", ".change-btn", this._updatePools.bind(this));
     html.on("click", ".deleteClass", this._deleteClass.bind(this));
@@ -319,11 +321,126 @@ export class ironboundActorSheet extends ActorSheet {
     // Initialize a default name.
     const name = `New ${type.capitalize()}`;
     // Prepare the item object.
+    let imgUrl = null;
+    switch (data.type) {
+      case "activeFeats":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/active.png",
+        };
+        break;
+      case "passiveFeats":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/passive.png",
+        };
+        break;
+      case "characterClass":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/characterClass.png",
+        };
+        break;
+      case "flaws":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/flaws.png",
+        };
+        break;
+      case "boons":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/boon.png",
+        };
+        break;
+      case "banes":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/bane.png",
+        };
+        break;
+      case "consumables":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/consumable.png",
+        };
+        break;
+      case "defenseitems":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/defenseitems.png",
+        };
+        break;
+      case "magicalSocieties":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/magicalSociety.png",
+        };
+        break;
+      case "potions":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/potion.png",
+        };
+        break;
+      case "wands":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/wand.png",
+        };
+        break;
+      case "weapons":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/weapons.png",
+        };
+        break;
+      case "fightingstances":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/fightingStance.png",
+        };
+        break;
+      case "factions":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/factions.png",
+        };
+        break;
+      case "species":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/species.png",
+        };
+        break;
+      case "scrolls":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/scroll.png",
+        };
+        break;
+      case "npcattack":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/npcAttack.png",
+        };
+        break;
+      case "npcability":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/feat.png",
+        };
+        break;
+      case "vehicleEnhancements":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/vehicleEnhancements.png",
+        };
+        break;
+      case "classAbilities":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/classAbilities.png",
+        };
+        break;
+      case "gear":
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/gear.png",
+        };
+        break;
+      default:
+        imgUrl = {
+          img: "systems/ironbound/assets/icons/basic-needs.png",
+        };
+    }
+
     const itemData = {
       name: name,
       type: type,
       system: data,
+      img: imgUrl.img,
     };
+
     // Remove the type from the dataset since it's in the itemData.type prop.
     delete itemData.system["type"];
 
@@ -477,6 +594,24 @@ export class ironboundActorSheet extends ActorSheet {
         this.actor.update({ "system.vehiclePoints": newPoints });
       }
     }
+  }
+
+  _changeQty(event){
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const item_id = dataset.itemId;
+    const point = dataset.point;
+    const item = this.actor.items.get(item_id);
+    item.update({"system.qty": item.system.qty+parseInt(point)})
+  }
+  
+  _changeMoney(event){
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const money = dataset.money
+    const moneyName = `system.${money}`
+    const point = dataset.point
+    this.actor.update({[moneyName]: this.actor.system[money] + parseInt(point) })
   }
 
   _updatePools(event) {

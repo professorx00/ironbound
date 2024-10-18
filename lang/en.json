@@ -46,7 +46,8 @@
       "weapons": "Weapon",
       "npcattack": "NPC Attack",
       "npcability": "NPC Ability",
-      "vehicleEnhancements": "Vehicle Enhancement"
+      "vehicleEnhancements": "Vehicle Enhancement",
+      "classAbilities": "Class Abilities"
     }
   }
 }

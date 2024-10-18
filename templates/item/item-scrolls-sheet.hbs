@@ -1,18 +1,25 @@
 <form class="{{cssClass}}" autocomplete="off">
-  <header class="sheet-header">
+   <header class="sheet-header">
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"  width="200px" height="200px"/>
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-      <a class="favoriteBtn">
-        {{#if system.fav}}
-        <i class="fa-solid fa-bookmark"></i>
-        {{else}}
-        <i class="fa-regular fa-bookmark"></i>
-        {{/if}}
-      </a>
+      <div class="item_name">
+        <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        <a class="favoriteBtn">
+          {{#if system.fav}}
+          <i class="fa-solid fa-bookmark"></i>
+          {{else}}
+          <i class="fa-regular fa-bookmark"></i>
+          {{/if}}
+        </a>
+      </div>
+    <div class="item-attributes">
+          <label for="system.qty">QTY</label>
+          <a class="changeOty change-btn"  data-point="1" ><i class="fa-solid fa-plus" data-point="1"></i></a>
+          <span>{{system.qty}}</span>
+          <a class="changeOty change-btn"  data-point="-1" ><i class="fa-solid fa-minus" data-point="-1"></i></a>
+    </div>
     </div>
   </header>
-
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>

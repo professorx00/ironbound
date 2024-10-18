@@ -77,6 +77,21 @@ export default class ironboundCharacter extends ironboundActorBase {
       initial: 2,
     });
 
+    schema.silver = new fields.NumberField({
+      ...requiredInteger,
+      initial: 0,
+    });
+
+    schema.copper = new fields.NumberField({
+      ...requiredInteger,
+      initial: 0,
+    });
+
+    schema.gold = new fields.NumberField({
+      ...requiredInteger,
+      initial: 0,
+    });
+
     schema.actionPoints = new fields.NumberField({
       ...requiredInteger,
       initial: 3,

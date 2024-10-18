@@ -108,6 +108,14 @@ export class ironboundItemSheet extends ItemSheet {
       html.on("click", ".favoriteBtn", (ev) => {
         this.item.update({ "system.fav": !this.item.system.fav});
       });
+
+      html.on("click", ".changeOty", (ev) => {
+        const el = ev.target;
+        const point = el.dataset.point;
+        this.item.update({
+          "system.qty": this.item.system.qty + parseInt(point),
+        });
+      });
   
   }
 }
