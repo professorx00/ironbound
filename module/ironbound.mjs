@@ -4,11 +4,14 @@ import { ironboundItem } from './documents/item.mjs';
 // Import sheet classes.
 import { ironboundActorSheet } from './sheets/actor-sheet.mjs';
 import { ironboundItemSheet } from './sheets/item-sheet.mjs';
+
+import { plagueboundActorSheet } from "./sheets/actor-plaguebound-sheet.mjs";
+import { plagueboundItemSheet } from "./sheets/item-plaguebound-sheet.mjs";
 // Import helper/utility classes and constants.
-import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
-import { IRONBOUND } from './helpers/config.mjs';
+import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
+import { IRONBOUND } from "./helpers/config.mjs";
 // Import DataModel classes
-import * as models from './data/_module.mjs';
+import * as models from "./data/_module.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -29,6 +32,8 @@ Hooks.once("init", function () {
     ironboundPoolAllocationDialog,
     rollItemMacro,
   };
+
+  registerSystemSettings();
 
   // Add custom constants for configuration.
   CONFIG.IRONBOUND = IRONBOUND;
@@ -84,16 +89,29 @@ Hooks.once("init", function () {
   CONFIG.ActiveEffect.legacyTransferral = false;
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("ironbound", ironboundActorSheet, {
-    makeDefault: true,
-    label: "IRONBOUND.SheetLabels.Actor",
-  });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("ironbound", ironboundItemSheet, {
-    makeDefault: true,
-    label: "IRONBOUND.SheetLabels.Item",
-  });
+  if (!game.settings.get("ironbound", "plaguebound")) {
+    Actors.unregisterSheet("core", ActorSheet);
+    Actors.registerSheet("ironbound", ironboundActorSheet, {
+      makeDefault: true,
+      label: "IRONBOUND.SheetLabels.Actor",
+    });
+    Items.unregisterSheet("core", ItemSheet);
+    Items.registerSheet("ironbound", ironboundItemSheet, {
+      makeDefault: true,
+      label: "IRONBOUND.SheetLabels.Item",
+    });
+  } else {
+    Actors.unregisterSheet("core", ActorSheet);
+    Actors.registerSheet("ironbound", plagueboundActorSheet, {
+      makeDefault: true,
+      label: "IRONBOUND.SheetLabels.Actor",
+    });
+    Items.unregisterSheet("core", ItemSheet);
+    Items.registerSheet("ironbound", plagueboundItemSheet, {
+      makeDefault: true,
+      label: "IRONBOUND.SheetLabels.Item",
+    });
+  }
 
   // class IronboundBoonDialog extends Dialog {
   //   constructor(actor, dialogData = {}, options = {}) {
@@ -141,6 +159,15 @@ Handlebars.registerHelper("is1MarkofDoom", function (actorId) {
   }
 });
 
+Handlebars.registerHelper("is1Corruption", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.system.corruption >= 1) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
 Handlebars.registerHelper("is2MarkofDoom", function (actorId) {
   let actor = game.actors.get(actorId);
   if (actor.system.markofdoom >= 2) {
@@ -150,9 +177,27 @@ Handlebars.registerHelper("is2MarkofDoom", function (actorId) {
   }
 });
 
+Handlebars.registerHelper("is2Corruption", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.system.corruption >= 2) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
 Handlebars.registerHelper("is3MarkofDoom", function (actorId) {
   let actor = game.actors.get(actorId);
   if (actor.system.markofdoom >= 3) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper("is3Corruption", function (actorId) {
+  let actor = game.actors.get(actorId);
+  if (actor.system.corruption >= 3) {
     return true;
   } else {
     return false;
@@ -764,6 +809,7 @@ class ironboundDamageDialog extends Application {
     this.formula = formula;
     this.crit = false;
     this.powerDie = false;
+    this.powerDice = 1;
     this.weaponType = weaponType;
   }
 
@@ -787,6 +833,7 @@ class ironboundDamageDialog extends Application {
       formula: this.formula,
       crit: this.crit,
       powerDie: this.powerDie,
+      powerDice: this.powerDice,
       weaponType: this.weaponType,
     };
   }
@@ -808,5 +855,16 @@ class ironboundDamageDialog extends Application {
       this.render();
     });
   }
+}
+
+function registerSystemSettings() {
+  game.settings.register(game.system.id, "plaguebound", {
+    config: true,
+    scope: "world",
+    name: "Plaguebound",
+    hint: "Initalize Plaguebound",
+    type: Boolean,
+    default: false,
+  });
 }
 

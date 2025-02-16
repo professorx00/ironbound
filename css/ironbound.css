@@ -39,6 +39,21 @@
   background: black;
 }
 
+.plaguebound{
+  background:#729e71;
+}
+
+.powerDice{
+  display:flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.powerDice button{
+  width: 40px;
+}
 
 .grid,
 .grid-2col {

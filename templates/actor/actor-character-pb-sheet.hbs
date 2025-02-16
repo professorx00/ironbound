@@ -1,0 +1,361 @@
+<form class="{{cssClass}} {{actor.type}} plaguebound flexcol" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <header class="sheet-header actor">
+    <div class="imgContainer">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+        <div>
+          Marks of Doom
+        </div>
+        <div class="doomContainer">
+          <div>
+            {{#if (is1MarkofDoom actor._id)}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/color-skull.png" />
+            </a>
+            {{else}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/skull.png" />
+            </a>
+            {{/if}}
+          </div>
+          <div>
+            {{#if (is2MarkofDoom actor._id)}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/color-skull.png" />
+            </a>
+            {{else}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/skull.png" />
+            </a>
+            {{/if}}
+          </div>
+          <div>
+            {{#if (is3MarkofDoom actor._id)}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/color-skull.png" />
+            </a>
+            {{else}}
+            <a class="clickDoom" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/skull.png" />
+            </a>
+            {{/if}}
+          </div>
+        </div>
+        <div>
+          Corruption
+        </div>
+        <div class="doomContainer">
+          <div>
+            {{#if (is1Corruption actor._id)}}
+            <a class="clickCorruption" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/ink.png" />
+            </a>
+            {{else}}
+            <a class="clickCorruption" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/water-drop.png" />
+            </a>
+            {{/if}}
+          </div>
+          <div>
+            {{#if (is2Corruption actor._id)}}
+            <a class="clickCorruption" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/ink.png" />
+            </a>
+            {{else}}
+            <a class="clickCorruption" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/water-drop.png" />
+            </a>
+            {{/if}}
+          </div>
+          <div>
+            {{#if (is3Corruption actor._id)}}
+            <a class="clickCorruption" data-actor-id="{{actor._id}}" data-mark="-1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/ink.png" />
+            </a>
+            {{else}}
+            <a class="clickCorruption" data-actor-id="{{actor._id}}" data-mark="1">
+              <img class="mark-of-doom" src="systems/ironbound/assets/water-drop.png" />
+            </a>
+            {{/if}}
+          </div>
+        </div>
+        <div class="doomContainer">
+          <a class="clickShortRest"><i class="fa-solid fa-mug-saucer"></i></a>
+          <a class="clickLongRest"><i class="fa-solid fa-bed"></i></a>
+        </div>
+    </div>
+    <div class="header-fields actor">
+      <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+      <div class="classRow"><h1 class="charClass"><input name="class" type="text" value="{{characterClass.name}}" placeholder="Class"/></h1><a class="deleteClass" data-class-id="{{characterClass._id}}"><i class="fa-solid fa-trash"></i></a></div>
+      <div class="classRow">
+          <h1 class="charClass"><input name="species" type="text" value="{{species.name}}" placeholder="Species"/></h1>
+          <a class="deleteClass" data-class-id="{{species._id}}">
+              <i class="fa-solid fa-trash"></i>
+          </a>
+          {{#if (isWere species.name)}}
+          <a class="were" data-were="{{system.were}}">
+            {{#if system.were}}
+            <i class="fa-duotone fa-solid fa-teddy-bear"></i>
+            {{else}}
+            <i class="fa-duotone fa-solid fa-transporter-1"></i>
+            {{/if}}
+          </a>
+          {{/if}}
+        </div>
+      <div class="stat-row">
+        <div class="stat-item">
+          <label>Level</label>
+          <input class="actorInput" type="text" name="system.level" value="{{system.level}}" data-dtype="Number"/>
+        </div>
+        <div class="stat-item">
+          <label>Movement</label>
+          <input class="actorInput" type="text" name="system.movement" value="{{system.movement}}" data-dtype="Number"/>
+        </div>
+        <div class="stat-item">
+          <label>Damage Bonus</label>
+          <input class="actorInput" type="text" name="system.damageBonus" value="{{system.damageBonus}}" data-dtype="Number"/>
+        </div>
+        <div class="stat-item">
+          <label>To Hit</label>
+          <input class="actorInput" type="text" name="system.toHit" value="{{system.toHit}}" data-dtype="Number"/>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-item m20">
+          <label>Health</label>
+         <div class="ironbound-row">
+            <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="health"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.health.current" value="{{system.health.current}}" data-dtype="Number"/>
+            <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
+            <input class="actorInput" type="number" name="system.health.base" value="{{system.health.base}}" data-dtype="Number"/>
+            <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="health"><i class="fa-solid fa-minus"></i></a>
+            <a class="resetPool refresh-btn" data-pool="health"><i class="fa-solid fa-repeat"></i></a>
+          </div> 
+        </div>
+        <div class="stat-item m20">
+          <label><a class="rollHealthDie" data-pool="health" data-formula="{{system.healthDie}}">Health Die</a></label>
+          <div>
+            <select name="healthDice" class="healthDiceSelect actorInput">
+              {{selectOptions system.healthDice selected=system.healthDie}}
+            </select>
+          </div>
+        </div>
+        <div class="stat-item m20">
+          <label for="system.actionPoints">Action Points</label>
+         <div class="ironbound-row">
+            <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="1"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.actionPoints" value="{{system.actionPoints}}" data-dtype="Number"/>
+            <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="-1"><i class="fa-solid fa-minus"></i></a>
+            <a class="resetPool refresh-actionPoints-btn" ><i class="fa-solid fa-repeat"></i></a>
+          </div> 
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-item m20">
+          <label><a class="rollPowerDie" data-roll-type='power' data-pool="Power" data-actor-id="{{actor._id}}" data-formula="{{system.powerDie}}">Power Die</a></label>
+          <div>
+            <select name="powerDice" class="powerDiceSelect actorInput" >
+              {{selectOptions system.powerDice selected=system.powerDie}}
+            </select>
+          </div>
+        </div>
+        <div class="stat-item m20">
+          <label>Destiny Die</label>
+         <div class="ironbound-row">
+            {{#if (hasDestinyDie system.destinyDie)}}
+            <a class="rollDestinyDie-btn" data-pool="destiny" data-formula="1d12"><i class="fa-solid fa-dice-d12"></i></a>
+            {{/if}}
+            <input class="actorInput" type="number" name="system.destinyDie" value="{{system.destinyDie}}" data-dtype="Number"/>
+            <a class="resetPool destinyRefresh-btn" data-pool="destiny"><i class="fa-solid fa-repeat"></i></a>
+          </div> 
+        </div>
+      </div>
+    <div class="stat-row">
+      <div class="stat-item">
+          <label for="system.copper">Copper</label>
+         <div class="ironbound-row">
+            <a class="change-money-btn"  data-point="1" data-money="copper"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.copper" value="{{system.copper}}" data-dtype="Number"/>
+            <a class="change-money-btn"  data-point="-1"  data-money="copper"><i class="fa-solid fa-minus"></i></a>
+          </div> 
+        </div>
+        <div class="stat-item">
+          <label for="system.silver">Silver</label>
+         <div class="ironbound-row">
+            <a class="change-money-btn"  data-point="1"  data-money="silver"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.silver" value="{{system.silver}}" data-dtype="Number"/>
+            <a class="change-money-btn"  data-point="-1"  data-money="silver"><i class="fa-solid fa-minus"></i></a>
+          </div> 
+        </div>
+         <div class="stat-item">
+          <label for="system.gold">Gold</label>
+         <div class="ironbound-row">
+            <a class="change-money-btn"  data-point="1"  data-money="gold"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.gold" value="{{system.gold}}" data-dtype="Number"/>
+            <a class="change-money-btn"  data-point="-1"  data-money="gold"><i class="fa-solid fa-minus"></i></a>
+          </div> 
+        </div>
+    </div>
+    </div>
+  </header>
+  <section class="pool-section">
+    <div class="pools">
+      <div class="arcane-holder">
+          <label for="system.arcane.current" class="pool-point-label-arcane "><a class="rollPool" data-roll-type='pool' data-pool="Arcane" data-actor-id="{{actor._id}}" data-ap="0"><h3>Arcane</h3></a></label>
+          <div class="ironbound-row">
+            <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="arcane"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.arcane.current" value="{{system.arcane.current}}" data-dtype="Number"/>
+            <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
+            <input class="actorInput" type="number" name="system.arcane.base" value="{{system.arcane.base}}" data-dtype="Number"/>
+            <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="arcane"><i class="fa-solid fa-minus"></i></a>
+            <a class="resetPool refresh-btn" data-pool="arcane"><i class="fa-solid fa-repeat"></i></a>
+          </div> 
+           <div class="def-attribute">
+            <h3>Defense</h3>
+            <input class="actorInput" type="number" name="system.arcane.def" value="{{system.arcane.def}}" data-dtype="Number"/>
+           </div> 
+        </div>
+      <div class="physical-holder">
+          <label for="system.physical.current" class="pool-point-label-physical "><a class="rollPool" data-roll-type='pool' data-pool="Physical" data-actor-id="{{actor._id}}" data-ap="0"><h3>Physical</h3></a></label>
+          <div class="ironbound-row">
+            <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="physical"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.physical.current" value="{{system.physical.current}}" data-dtype="Number"/>
+            <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
+            <input class="actorInput" type="number" name="system.physical.base" value="{{system.physical.base}}" data-dtype="Number"/>
+            <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="physical"><i class="fa-solid fa-minus"></i></a>
+            <a class="resetPool refresh-btn" data-pool="physical"><i class="fa-solid fa-repeat"></i></a>
+          </div> 
+           <div class="def-attribute">
+            <h3>Defense</h3>
+            <input class="actorInput" type="number" name="system.physical.def" value="{{system.physical.def}}" data-dtype="Number"/>
+           </div> 
+        </div>
+      <div class="mental-holder">
+          <label for="system.mental.current" class="pool-point-label-mental "><a class="rollPool" data-roll-type='pool' data-pool="Mental" data-actor-id="{{actor._id}}" data-ap="0"><h3>Mental</h3></a></label>
+          <div class="ironbound-row">
+            <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="mental"><i class="fa-solid fa-plus"></i></a>
+            <input class="actorInput" type="number" name="system.mental.current" value="{{system.mental.current}}" data-dtype="Number"/>
+            <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
+            <input class="actorInput" type="number" name="system.mental.base" value="{{system.mental.base}}" data-dtype="Number"/>
+            <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="mental"><i class="fa-solid fa-minus"></i></a>
+            <a class="resetPool refresh-btn" data-pool="mental"><i class="fa-solid fa-repeat"></i></a>
+          </div> 
+           <div class="def-attribute">
+            <h3>Defense</h3>
+            <input class="actorInput" type="number" name="system.mental.def" value="{{system.mental.def}}" data-dtype="Number"/>
+           </div> 
+        </div>
+    </div>
+  </section>
+ 
+  <header class="sheet-boon">
+      <div class="boon-bane-container">
+        <div class="boons-banes boon">
+          <div class="boon-bane-title-container">
+            <h3>Boons</h3>
+                <a class='item-control item-create' title='Create item' data-type='boons'>
+                  <i class='fas fa-plus'></i>
+                </a>
+          </div>
+          <ol>
+          {{#each boons as |item id|}}
+            <li class="boon-bane-title-container item" data-item-id='{{item._id}}'>
+              <span>{{item.name}}</span>
+              <div class='item-controls'>
+                <a
+                  class='item-control item-edit'
+                >
+                  <i class='fas fa-edit'></i>
+                </a>
+                <a
+                  class='item-control item-delete'
+                >
+                  <i class='fas fa-trash'></i>
+                </a>
+              </div>
+          </li>
+          {{/each}}
+          </ol>
+        </div>
+        <div class="boons-banes">
+          <div class="boon-bane-title-container">
+            <h3>Banes</h3>
+                <a class='item-control item-create' title='Create item' data-type='banes'>
+                  <i class='fas fa-plus'></i>
+                </a>
+          </div>
+          <ol>
+          {{#each banes as |item id|}}
+          <li class="boon-bane-title-container item" data-item-id='{{item._id}}'>
+            <span>{{item.name}}</span>
+             <div class='item-controls'>
+                <a
+                  class='item-control item-edit'
+                >
+                  <i class='fas fa-edit'></i>
+                </a>
+                <a
+                  class='item-control item-delete'
+                >
+                  <i class='fas fa-trash'></i>
+                </a>
+              </div>
+          </li>
+          {{/each}}
+          </ol>
+        </div>
+      </div>
+  </header>
+  <nav class="ironbound sheet-tabs tabs" data-group="primary">
+    {{!-- Default tab is specified in actor-sheet.mjs --}}
+    <a class="item" data-tab="favorites">Favorites</a>
+    <a class="item" data-tab="description">Description</a>
+    {{#if (isGM "user")}}
+    <a class="item" data-tab="gmnotes">GM Notes</a>
+    {{/if}}
+    <a class="item" data-tab="classAbilites">Abilities</a>
+    <a class="item" data-tab="features">Feats</a>
+    <a class="item" data-tab="flaws">Flaws</a>
+    <a class="item" data-tab="fightingstances">Fighting Stances</a>
+    <a class="item" data-tab="factions">factions</a>
+    <a class="item" data-tab="magicalSocieties">Magical Societies</a>
+    <a class="item" data-tab="items">Items</a>
+  </nav>
+  <section class="sheet-body">
+    <div class="tab favorites" data-group="primary" data-tab="favorites">
+      {{> "systems/ironbound/templates/actor/parts/actor-favorites.hbs"}}
+    </div>
+     {{!-- Biography Tab --}}
+    <div class="tab biography" data-tab="description">
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedBiography target="system.biography" engine="prosemirror" button=true editable=editable}}
+    </div>
+    <div class="tab biography" data-tab="gmnotes">
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedgmnotes target="system.gmnotes" engine="prosemirror" button=true editable=editable}}
+    </div>
+    <div class="tab features" data-tab="features">
+      {{> "systems/ironbound/templates/actor/parts/actor-features.hbs"}}
+    </div>
+    <div class="tab flaws" data-tab="flaws">
+      {{> "systems/ironbound/templates/actor/parts/actor-flaws.hbs"}}
+    </div>
+    <div class="tab fightingstances" data-tab="fightingstances">
+      {{> "systems/ironbound/templates/actor/parts/actor-fightingstances.hbs"}}
+    </div>
+      <div class="tab classAbilites" data-tab="classAbilites">
+      {{> "systems/ironbound/templates/actor/parts/actor-classAbilities.hbs"}}
+    </div>
+
+    <div class="tab magicalSocieties" data-tab="magicalSocieties">
+      {{> "systems/ironbound/templates/actor/parts/actor-magicalSocieties.hbs"}}
+    </div>
+
+    <div class="tab items" data-tab="items">
+      {{> "systems/ironbound/templates/actor/parts/actor-items.hbs"}}
+    </div>
+
+  </section>
+
+</form>

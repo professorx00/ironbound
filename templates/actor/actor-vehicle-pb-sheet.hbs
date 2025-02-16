@@ -1,0 +1,53 @@
+<form class="{{cssClass}} {{actor.type}} plaguebound flexcol" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <header class="sheet-header">
+    <div class="imgContainer">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    </div>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+      <div class="stat-row">
+        <div class="targetNumber stat-item m10">
+          <label for="system.vehiclePoints">Vehicle Points</label>
+          <input type="number" name="system.vehiclePoints" value="{{system.vehiclePoints}}" data-dtype="Number"/>
+        </div>
+        <div class="targetNumber stat-item m10">
+          <label for="system.armor">Armor</label>
+          <input type="number" name="system.armor" value="{{system.armor}}" data-dtype="Number"/>
+        </div>
+         <div class="targetNumber stat-item m10">
+          <label for="system.movement">Movement</label>
+          <input type="number" name="system.movement" value="{{system.movement}}" data-dtype="Number"/>
+        </div>
+         <div class="targetNumber stat-item m10">
+          <label for="system.toHit">Target Number</label>
+          <input type="number" name="system.toHit" value="{{system.toHit}}" data-dtype="Number"/>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="headerSpacer"></div>
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    {{!-- Default tab is specified in actor-sheet.mjs --}}
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="ves">Vehicle Enhancements</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Biography Tab --}}
+    <div class="tab biography" data-group="primary" data-tab="description">
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedBiography target="system.biography" engine="prosemirror" button=true editable=editable}}
+    </div>
+
+    {{!-- Owned Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="ves">
+       {{> "systems/ironbound/templates/actor/parts/actor-vehicleEnhancements.hbs"}}
+    </div>
+  </section>
+</form>
+

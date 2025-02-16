@@ -1,0 +1,177 @@
+<form class="{{cssClass}} {{actor.type}} plaguebound flexcol" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <header class="sheet-header">
+    <div class="imgContainer">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    </div>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+      
+      <h1 class="classRow"><label>Weakness</label><input type="text" name="system.weakness" value="{{system.weakness}}" data-dtype="String"/></h1>
+      
+      <h1 class="classRow"><label>Resistance</label> <input type="text" name="system.resistance" value="{{system.resistance}}" data-dtype="String"/></h1>
+    </div>
+    
+  </header>
+    <div class="sheet-stats">
+      <div class="stat-row">
+          <div class="stat-item m10">
+            <label>Health</label>
+          <div class="ironbound-row">
+              <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="health"><i class="fa-solid fa-plus"></i></a>
+              <input type="number" name="system.health.current" value="{{system.health.current}}" data-dtype="Number"/>
+              <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
+              <input type="number" name="system.health.base" value="{{system.health.base}}" data-dtype="Number"/>
+              <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="health"><i class="fa-solid fa-minus"></i></a>
+              <a class="resetPool refresh-btn" data-pool="health"><i class="fa-solid fa-repeat"></i></a>
+            </div> 
+          </div>
+          <div class="stat-item m10">
+            <label>Power</label>
+          <div class="ironbound-row">
+              <a class="advancePoolPoints change-btn"  data-poolpoint="1" data-pool="power"><i class="fa-solid fa-plus"></i></a>
+              <input type="number" name="system.power.current" value="{{system.power.current}}" data-dtype="Number"/>
+              <span><i class="fa-sharp fa-solid fa-slash-forward"></i></span>
+              <input type="number" name="system.power.base" value="{{system.power.base}}" data-dtype="Number"/>
+              <a class="advancePoolPoints change-btn"  data-poolpoint="-1" data-pool="power"><i class="fa-solid fa-minus"></i></a>
+              <a class="resetPool refresh-btn" data-pool="health"><i class="fa-solid fa-repeat"></i></a>
+            </div> 
+          </div>
+          <div class="stat-item m10">
+            <label for="system.actionPoints">Action Points</label>
+          <div class="ironbound-row">
+              <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="1"><i class="fa-solid fa-plus"></i></a>
+              <input type="number" name="system.actionPoints" value="{{system.actionPoints}}" data-dtype="Number"/>
+              <a class="advancePoolPoints change-actionPoint-btn"  data-poolpoint="-1"><i class="fa-solid fa-minus"></i></a>
+              <a class="resetPool refresh-actionPoints-btn" ><i class="fa-solid fa-repeat"></i></a>
+            </div> 
+          </div>
+      </div>
+      <div class="stat-row">
+        <div class="targetNumber stat-item m10">
+            <label for="system.toHit">Target Number</label>
+            <input type="number" name="system.toHit" value="{{system.toHit}}" data-dtype="Number"/>
+          </div>
+          <div class="targetNumber stat-item m10">
+            <label for="system.movement">Movement</label>
+            <input type="number" name="system.movement" value="{{system.movement}}" data-dtype="Number"/>
+          </div>
+          <div class="targetNumber stat-item m10">
+            <label for="system.damageBonus">Damage Bonus</label>
+            <input type="number" name="system.damageBonus" value="{{system.damageBonus}}" data-dtype="Number"/>
+          </div>
+          <div class="targetNumber stat-item m10">
+            <label for="system.damageReduction">Damage Reduction</label>
+            <input type="number" name="system.damageReduction" value="{{system.damageReduction}}" data-dtype="Number"/>
+          </div>
+          <div class="stat-item m10">
+            <label><a class="rollPowerDie" data-roll-type='power' data-pool="Power" data-actor-id="{{actor._id}}" data-formula="{{system.powerDie}}">Power Die</a></label>
+            <div>
+              <select name="powerDice" class="powerDiceSelect">
+                {{selectOptions system.powerDice selected=system.powerDie}}
+              </select>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <a class="rollPool" data-roll-type='pool' data-pool="Arcane" data-actor-id="{{actor._id}}" data-ap="0"><h3>Arcane Check</h3></a>
+      <a class="rollPool" data-roll-type='pool' data-pool="Physical" data-actor-id="{{actor._id}}" data-ap="0"><h3>Physical Check</h3></a>
+      <a class="rollPool" data-roll-type='pool' data-pool="Mental" data-actor-id="{{actor._id}}" data-ap="0"><h3>Mental Check</h3></a>
+    </div>
+   <div class="sheet-boon-npc"></header>
+      <div class="boon-bane-container">
+        <div class="boons-banes boon">
+          <div class="boon-bane-title-container">
+            <h3>Boons</h3>
+                <a class='item-control item-create' title='Create item' data-type='boons'>
+                  <i class='fas fa-plus'></i>
+                </a>
+          </div>
+          <ol>
+          {{#each boons as |item id|}}
+            <li class="boon-bane-title-container item" data-item-id='{{item._id}}'>
+              <span>{{item.name}}</span>
+              <div class='item-controls'>
+                <a
+                  class='item-control item-edit'
+                >
+                  <i class='fas fa-edit'></i>
+                </a>
+                <a
+                  class='item-control item-delete'
+                >
+                  <i class='fas fa-trash'></i>
+                </a>
+              </div>
+          </li>
+          {{/each}}
+          </ol>
+        </div>
+        <div class="boons-banes">
+          <div class="boon-bane-title-container">
+            <h3>Banes</h3>
+                <a class='item-control item-create' title='Create item' data-type='banes'>
+                  <i class='fas fa-plus'></i>
+                </a>
+          </div>
+          <ol>
+          {{#each banes as |item id|}}
+          <li class="boon-bane-title-container item" data-item-id='{{item._id}}'>
+            <span>{{item.name}}</span>
+             <div class='item-controls'>
+                <a
+                  class='item-control item-edit'
+                >
+                  <i class='fas fa-edit'></i>
+                </a>
+                <a
+                  class='item-control item-delete'
+                >
+                  <i class='fas fa-trash'></i>
+                </a>
+              </div>
+          </li>
+          {{/each}}
+          </ol>
+        </div>
+      </div>
+  </div>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    {{!-- Default tab is specified in actor-sheet.mjs --}}
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="attacks">Attacks</a>
+    <a class="item" data-tab="abilities">Abilities</a>
+    <a class="item" data-tab="effects">Effects</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Biography Tab --}}
+    <div class="tab biography" data-group="primary" data-tab="description">
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedBiography target="system.biography" engine="prosemirror" button=true editable=editable}}
+    </div>
+
+    {{!-- Owned Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="attacks">
+       {{> "systems/ironbound/templates/actor/parts/actor-items-npc.hbs"}}
+    </div>
+
+    {{!-- Owned Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="abilities">
+       {{> "systems/ironbound/templates/actor/parts/actor-items-npcabilities.hbs"}}
+    </div>
+
+    {{!-- Active Effects Tab --}}
+    <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+      {{> "systems/ironbound/templates/actor/parts/actor-effects.hbs"}}
+    </div>
+
+  </section>
+</form>
+
